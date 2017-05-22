@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 public class Fighter{
     
-    private int health;  //When health reaches zero, the Fighter loses
+    private int totalHealth;  //When health reaches zero, the Fighter loses
+    private int currentHealth;
     private int attack;  //Damage done by Fighter
     private int defense;  //Damage negated by Fighter
     private int speed;  //How fast the Fighter takes actions and moves

@@ -38,16 +38,16 @@ public class Neuron{
 
     public void activation(){
         sums[0] = 600 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 700 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 700 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 60 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 60 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 40 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 40 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 100 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 100 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 2 / (1 + Math.exp(-1 * sums[0]));
-        sums[0] = 2 / (1 + Math.exp(-1 * sums[0]));
+        sums[1] = 700 / (1 + Math.exp(-1 * sums[0]));
+        sums[2] = 700 / (1 + Math.exp(-1 * sums[0]));
+        sums[3] = 60 / (1 + Math.exp(-1 * sums[0]));
+        sums[4] = 60 / (1 + Math.exp(-1 * sums[0]));
+        sums[5] = 40 / (1 + Math.exp(-1 * sums[0]));
+        sums[6] = 40 / (1 + Math.exp(-1 * sums[0]));
+        sums[7] = 100 / (1 + Math.exp(-1 * sums[0]));
+        sums[8] = 100 / (1 + Math.exp(-1 * sums[0]));
+        sums[9] = 1 / (1 + Math.exp(-1 * sums[0]));
+        sums[10] = 1 / (1 + Math.exp(-1 * sums[0]));
     }
 
     public long selection(){
