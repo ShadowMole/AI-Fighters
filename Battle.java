@@ -1,24 +1,22 @@
+public class Battle{
 
-/**
- * Abstract class Battle - write a description of the class here
- * 
- * @author (your name here)
- * @version (version number or date here)
- */
-public abstract class Battle
-{
-    // instance variables - replace the example below with your own
-    private int x;
+    private Fighter f1;
+    private Fighter f2;
+    private static int time;
 
-    /**
-     * An example of a method - replace this comment with your own
-     * 
-     * @param  y    a sample parameter for a method
-     * @return        the sum of x and y 
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public Battle(){
+        f1 = new Fighter("Fighter 1", 100);
+        f2 = new Fighter("Fighter 2", 500);
+        f1.setEnemy(f2);
+        f2.setEnemy(f1);
+        time = 90000;
+    }
+    
+    public static int getTime(){
+        return time;
+    }
+    
+    public void run(){
+        
     }
 }

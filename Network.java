@@ -5,6 +5,7 @@ public class Network{
     private Neuron[] second;
     private Neuron[] last;
     private Neuron output;
+    private Neuron answer;
 
     /**
      * Constructor for objects of class Network
@@ -16,6 +17,8 @@ public class Network{
         first = new Neuron[10];
         second = new Neuron[10];
         last = new Neuron[x];
+        answer = new Neuron(n, x);
+
         for(int i = 0; i < first.length; i++){
             first[i] = new Neuron(n, x);
         }
@@ -45,8 +48,9 @@ public class Network{
         for(Neuron n : last){
             n.addConnection(x, output);
         }
+        output.addConnection(x, answer);
     }
-    
+
     public int makeDecision(double[] info){
         input.feedforward(info);
         input.fire();
@@ -59,8 +63,8 @@ public class Network{
         for(Neuron n : last){
             n.fire();
         }
-        output.activation();
-        int selection = (int) output.selection();
+        output.fire();
+        int selection = (int) answer.selection();
         return selection;
     }
 }
