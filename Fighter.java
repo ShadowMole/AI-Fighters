@@ -16,6 +16,8 @@ public class Fighter{
     private String name;
     private Move currentMove;
     private double direction;
+    private boolean inMove;
+    private int moveTime;
 
     public Fighter(String name, int x){
         this.name = name;
@@ -28,6 +30,8 @@ public class Fighter{
         attack = 40;
         defense = 25;
         speed = 100;
+        inMove = false;
+        moveTime = 0;
 
         location = new Location(x,0);
         if(x == 100){
@@ -46,12 +50,18 @@ public class Fighter{
         brain = new Network(11, commands.size());
     }
 
-    public int act(){
-       // if(Battle.getTime() % speed == 0){
+    public void act(){
+        if(moveTime > 0){
+            moveTime--;
+            if(moveTime == 0){
+                endMove();
+            }
+        }
+        if(Battle.getTime() % speed == 0 && !inMove){
             double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMove(), enemy.getCurrentMove(), direction, enemy.getDirection()};
             int decision = brain.makeDecision(info);
-            return decision;
-      //  }
+            newCommand(decision);
+        }
     }
 
     public Location getLocation(){
@@ -81,8 +91,35 @@ public class Fighter{
     public double getDirection(){
         return direction;
     }
-    
+
     public void setEnemy(Fighter f){
         enemy = f;
+    }
+
+    public void newCommand(int x){
+        Command c = commands.get(x);
+        moves.forEach(m -> {
+                if(m.getCommand() == c){
+                    currentMove = m;
+                    moveTime = currentMove.getTime();
+                    inMove = true;
+                    return;
+                }
+            });
+    }
+
+    public void endMove(){
+        enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
+        inMove = false;
+    }
+
+    public void changeHealth(double moveDamage, double enemyAttack, String move){
+        double damage = moveDamage + enemyAttack - defense;
+        currentHealth -= damage;
+        System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack. \n");
+    }
+    
+    public String getName(){
+        return name;
     }
 }

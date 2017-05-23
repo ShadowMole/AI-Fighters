@@ -51,9 +51,9 @@ public class Neuron{
     }
 
     public long selection(){
-        for(int i = 0; i < sums.length; i++){
+      /*  for(int i = 0; i < sums.length; i++){
             System.out.println(i + " = " + sums[i]);
-        }
+        } */
         double sum  = 0;
         for(int i = 0; i < sums.length; i++){
             sum += sums[i];
