@@ -29,9 +29,9 @@ public class Battle{
         }
         if(time == 0){
             System.out.println("There is a tie.");
-        }else if(f2.getHealth() == 0){
+        }else if(f2.getHealth() <= 0){
             System.out.println("Fighter 1 wins!!!");
-        }else{
+        }else if(f1.getHealth() <= 0){
             System.out.println("Fighter 2 wins!!!");
         }
     }
