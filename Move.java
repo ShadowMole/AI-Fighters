@@ -3,6 +3,7 @@ public class Move{
     private Command command;
     private String name;
     private double attack;
+    private double defense;
     private int time;
 
     public Move(String name){
@@ -10,36 +11,43 @@ public class Move{
         if(name.equals("Monday")){
             command = Command.MONDAY;
             attack = 150;
+            defense = 0;
             time = 2000;
         }
         if(name.equals("Tuesday")){
             command = Command.TUESDAY;
             attack = 50;
+            defense = 0;
             time = 700;
         }
         if(name.equals("Wednesday")){
             command = Command.WEDNESDAY;
             attack = 60;
+            defense = 25;
             time = 800;
         }
         if(name.equals("Thursday")){
             command = Command.THURSDAY;
             attack = 20;
+            defense = 25;
             time = 400;
         }
         if(name.equals("Friday")){
             command = Command.FRIDAY;
             attack = 15;
+            defense = 40;
             time = 200;
         }
         if(name.equals("Saturday")){
             command = Command.SATURDAY;
             attack = 10;
+            defense = 40;
             time = 100;
         }
         if(name.equals("Sunday")){
             command = Command.SUNDAY;
             attack = 20;
+            defense = 50;
             time = 500;
         }
     }
@@ -58,5 +66,9 @@ public class Move{
     
     public String getName(){
         return name;
+    }
+    
+    public double getDefense(){
+        return defense;
     }
 }

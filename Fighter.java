@@ -18,8 +18,9 @@ public class Fighter{
     private double direction;
     private boolean inMove;
     private int moveTime;
+    private double regen;
 
-    public Fighter(String name, int x){
+    public Fighter(String name, int x, double regen, double strength){
         this.name = name;
         abilities = new ArrayList<>();
         moves = new ArrayList<>();
@@ -27,11 +28,12 @@ public class Fighter{
 
         totalHealth = 500;
         currentHealth = totalHealth;
-        attack = 40;
+        attack = 50 + strength;
         defense = 25;
         speed = 100;
         inMove = false;
         moveTime = 0;
+        this.regen = regen;
 
         location = new Location(x,0);
         if(x == 100){
@@ -47,7 +49,7 @@ public class Fighter{
             });
 
         moves.forEach(m -> commands.add(m.getCommand()));
-        brain = new Network(11, commands.size());
+        brain = new Network(13, commands.size());
     }
 
     public void act(){
@@ -57,8 +59,11 @@ public class Fighter{
                 endMove();
             }
         }
+        if(Battle.getTime() % 450 == 0 && currentHealth < totalHealth){
+            currentHealth += regen;
+        }
         if(Battle.getTime() % speed == 0 && !inMove){
-            double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMove(), enemy.getCurrentMove(), direction, enemy.getDirection()};
+            double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection()};
             int decision = brain.makeDecision(info);
             newCommand(decision);
         }
@@ -80,11 +85,19 @@ public class Fighter{
         return defense;
     }
 
-    public double getCurrentMove(){
+    public double getCurrentMoveAttack(){
         if(currentMove == null){
             return 0;
         }else{
             return currentMove.getAttack();
+        }
+    }
+
+    public double getCurrentMoveDefense(){
+        if(currentMove == null){
+            return 0;
+        }else{
+            return currentMove.getDefense();
         }
     }
 
@@ -114,11 +127,13 @@ public class Fighter{
     }
 
     public void changeHealth(double moveDamage, double enemyAttack, String move){
-        double damage = moveDamage + enemyAttack - defense;
-        currentHealth -= damage;
-        System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack. \n");
+        double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
+      //  if(damage > 0){
+            currentHealth -= damage;
+            System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+        //}
     }
-    
+
     public String getName(){
         return name;
     }

@@ -5,8 +5,8 @@ public class Battle{
     private static int time;
 
     public Battle(){
-        f1 = new Fighter("Fighter 1", 100);
-        f2 = new Fighter("Fighter 2", 500);
+        f1 = new Fighter("Fighter 1", 100, 0, 10);
+        f2 = new Fighter("Fighter 2", 500, 15, 0);
         f1.setEnemy(f2);
         f2.setEnemy(f1);
         time = 90000;
