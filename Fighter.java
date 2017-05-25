@@ -19,6 +19,8 @@ public class Fighter{
     private boolean inMove;
     private int moveTime;
     private double regen;
+    private double lastHealth;
+    private double lastOpponent;
 
     public Fighter(String name, int x, double regen, double strength){
         this.name = name;
@@ -107,6 +109,8 @@ public class Fighter{
 
     public void setEnemy(Fighter f){
         enemy = f;
+        lastHealth = currentHealth;
+        lastOpponent = enemy.getHealth();
     }
 
     public void newCommand(int x){
@@ -124,17 +128,24 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
+        brain.learn(currentHealth, enemy.getHealth(), lastHealth, lastOpponent);
+        lastHealth = currentHealth;
+        lastOpponent = enemy.getHealth();
     }
 
     public void changeHealth(double moveDamage, double enemyAttack, String move){
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
-      //  if(damage > 0){
+        if(damage >= 0){
             currentHealth -= damage;
             System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
-        //}
+        }
     }
 
     public String getName(){
         return name;
+    }
+
+    public Network getBrain(){
+        return brain;
     }
 }

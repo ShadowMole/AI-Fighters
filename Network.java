@@ -6,6 +6,7 @@ public class Network{
     private Neuron[] last;
     private Neuron output;
     private Neuron answer;
+    private double error;
 
     /**
      * Constructor for objects of class Network
@@ -85,5 +86,39 @@ public class Network{
         output.fire();
         int selection = (int) answer.selection();
         return selection;
+    }
+
+    public void learn(double health, double eHealth, double lHealth, double lEHealth){
+        error = (lHealth / lEHealth) - (health / eHealth);
+        for(Synapse s : output.getConnections()){
+            s.lastLearning(error);
+        }
+        Synapse x = output.getConnections().get(0);
+        for(Neuron n : last){
+            for(Synapse s : n.getConnections()){
+                s.learning(x.getDeltaOutput(), x.getLastWeight());
+            }
+        }
+        for(Neuron n : second){
+            for(Synapse s : n.getConnections()){
+                s.learning(x.getDeltaOutput(), x.getLastWeight());
+            }
+        }
+        for(Neuron n : first){
+            for(Synapse s : n.getConnections()){
+                s.learning(x.getDeltaOutput(), x.getLastWeight());
+            }
+        }
+        for(Neuron n : input){
+            for(Synapse s : n.getConnections()){
+                s.learning(x.getDeltaOutput(), x.getLastWeight());
+            }
+        }
+    }
+
+    public void printWeights(){
+        for(Synapse s: output.getConnections()){
+            System.out.println(s.getWeight());
+        }
     }
 }

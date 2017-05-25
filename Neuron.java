@@ -5,6 +5,8 @@ public class Neuron{
     private ArrayList<Synapse> connections;
     private int selection;
     private double bias;
+    private double lastInput;
+    private double lastOutput;
 
     public Neuron(int x){
         connections = new ArrayList<>();
@@ -23,6 +25,7 @@ public class Neuron{
     }
 
     public void fire(){
+        lastInput = sums;
         activation();
         for(Synapse c : connections){
             c.feedforward(sums);
@@ -35,7 +38,27 @@ public class Neuron{
     }
 
     public long selection(){
+        lastInput = sums;
         activation();
-        return Math.round((sums * selection) * 10) / 10;
+        lastOutput = sums;
+        double answer = sums;
+        sums = 0.0;
+        return Math.round((answer * selection) * 10) / 10;
+    }
+
+    public double getLastInput(){
+        return lastInput;
+    }
+
+    public double primeActivation(){
+        return (Math.exp(lastInput - bias)) / ((Math.exp(lastInput - bias) + 1) * (Math.exp(lastInput - bias) + 1));
+    }
+
+    public double getLastOutput(){
+        return lastOutput;
+    }
+    
+    public ArrayList<Synapse> getConnections(){
+        return connections;
     }
 }
