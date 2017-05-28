@@ -1,24 +1,23 @@
+import java.util.ArrayList;
 public class Network{
 
     private Neuron[] input;
     private Neuron[] first;
     private Neuron[] second;
     private Neuron[] last;
-    private Neuron output;
-    private Neuron answer;
+    private Neuron[] output;
     private double error;
+    private double[] outputs;
 
     /**
      * Constructor for objects of class Network
      */
-    public Network(int n, int x)
-    {
+    public Network(int n, int x){
         input = new Neuron[n];
-        output = new Neuron(x);
         first = new Neuron[10];
         second = new Neuron[10];
+        output = new Neuron[x];
         last = new Neuron[x];
-        answer = new Neuron(x);
         for(int i = 0; i < input.length; i++){
             input[i] = new Neuron(x);
         }
@@ -31,6 +30,10 @@ public class Network{
         for(int i = 0; i < last.length; i++){
             last[i] = new Neuron(x);
         }
+        for(int i = 0; i < output.length; i++){
+            output[i] = new Neuron(x);
+        }
+        outputs = new double[x];
         setConnections(n);
     }
 
@@ -51,9 +54,10 @@ public class Network{
             }
         }
         for(Neuron n : last){
-            n.addConnection(x, output);
-        }
-        output.addConnection(x, answer);
+            for(Neuron m : output){
+                n.addConnection(x, m);
+            }
+        } 
     }
 
     public int makeDecision(double[] info){
@@ -83,42 +87,83 @@ public class Network{
         for(Neuron n : last){
             n.fire();
         }
-        output.fire();
-        int selection = (int) answer.selection();
-        return selection;
+        for(int i = 0; i < output.length; i++){
+            outputs[i] = output[i].selection();
+        }
+        return getSelection();
     }
 
     public void learn(double health, double eHealth, double lHealth, double lEHealth){
         error = (lHealth / lEHealth) - (health / eHealth);
-        for(Synapse s : output.getConnections()){
-            s.lastLearning(error);
-        }
-        Synapse x = output.getConnections().get(0);
+        ArrayList<Double> hiddenDelta = new ArrayList<>();
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){
-                s.learning(x.getDeltaOutput(), x.getLastWeight());
+                s.lastLearning(error);
+                hiddenDelta.add(s.getHiddenDelta(error));
             }
         }
+        ArrayList<Double> deltaWeights = new ArrayList<>();
+        for(Neuron n : second){
+            for(Double d : hiddenDelta){
+                deltaWeights.add(n.getLastInput() * d);
+            }
+        }
+        int count = 0;
+        for(Neuron n : last){
+            for(Synapse s : n.getConnections()){
+                s.learning(deltaWeights.get(count));
+                count++;
+            }
+        }
+        hiddenDelta = new ArrayList<>();
         for(Neuron n : second){
             for(Synapse s : n.getConnections()){
-                s.learning(x.getDeltaOutput(), x.getLastWeight());
+                hiddenDelta.add(s.getHiddenDelta(error));
             }
         }
+        deltaWeights = new ArrayList<>();
+        for(Neuron n : first){
+            for(Double d : hiddenDelta){
+                deltaWeights.add(n.getLastInput() * d);
+            }
+        }
+        count = 0;
+        for(Neuron n : second){
+            for(Synapse s : n.getConnections()){
+                s.learning(deltaWeights.get(count));
+                count++;
+            }
+        }
+        hiddenDelta = new ArrayList<>();
         for(Neuron n : first){
             for(Synapse s : n.getConnections()){
-                s.learning(x.getDeltaOutput(), x.getLastWeight());
+                hiddenDelta.add(s.getHiddenDelta(error));
             }
         }
-        for(Neuron n : input){
+        deltaWeights = new ArrayList<>();
+        for(Neuron n : second){
+            for(Double d : hiddenDelta){
+                deltaWeights.add(n.getLastInput() * d);
+            }
+        }
+        count = 0;
+        for(Neuron n : first){
             for(Synapse s : n.getConnections()){
-                s.learning(x.getDeltaOutput(), x.getLastWeight());
+                s.learning(deltaWeights.get(count));
+                count++;
             }
         }
     }
 
-    public void printWeights(){
-        for(Synapse s: output.getConnections()){
-            System.out.println(s.getWeight());
+    public int getSelection(){
+        int x = -1;
+        for(int i = 0; i < outputs.length; i++){
+            if(x == -1){
+                x = i;
+            }else if(outputs[i] > outputs[x]){
+                x = i;
+            }
         }
+        return x;
     }
 }

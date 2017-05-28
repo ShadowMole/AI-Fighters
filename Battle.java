@@ -11,11 +11,11 @@ public class Battle{
         f2.setEnemy(f1);
         time = 90000;
     }
-    
+
     public static int getTime(){
         return time;
     }
-    
+
     public void run(){
         while(time > 0 && f1.getHealth() > 0 && f2.getHealth() > 0){
             f1.act();
@@ -33,6 +33,12 @@ public class Battle{
             System.out.println("Fighter 1 wins!!!");
         }else if(f1.getHealth() <= 0){
             System.out.println("Fighter 2 wins!!!");
+        }
+        try{
+            Thread.sleep(1);
+        }
+        catch(Exception e){
+            System.out.print(e);
         }
     }
 }

@@ -37,13 +37,13 @@ public class Neuron{
         sums = 1 / (1 + Math.exp((-1  * sums) - bias));
     }
 
-    public long selection(){
+    public double selection(){
         lastInput = sums;
         activation();
         lastOutput = sums;
         double answer = sums;
         sums = 0.0;
-        return Math.round((answer * selection) * 10) / 10;
+        return answer;
     }
 
     public double getLastInput(){
@@ -60,5 +60,9 @@ public class Neuron{
     
     public ArrayList<Synapse> getConnections(){
         return connections;
+    }
+    
+    public double getDeltaOutput(double error){
+        return error * primeActivation();
     }
 }
