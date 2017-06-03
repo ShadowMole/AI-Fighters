@@ -94,7 +94,7 @@ public class Network{
     }
 
     public void learn(double error){
-        this.error = error;
+        this.error = 1 - error;
         ArrayList<Double> hiddenDelta = new ArrayList<>();
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){
