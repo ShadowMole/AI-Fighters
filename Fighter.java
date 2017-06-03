@@ -12,6 +12,7 @@ public class Fighter{
     private ArrayList<Move> moves;  //Moves available to Fighter
     private ArrayList<Command> commands;  //Commands to use moves
     private Network brain;
+    private QLearn brain2;
     private Fighter enemy;
     private String name;
     private Move currentMove;
@@ -21,13 +22,14 @@ public class Fighter{
     private double regen;
     private double lastHealth;
     private double lastOpponent;
+    private int sim;
+    private int decide;
 
     public Fighter(String name, int x, double regen, double strength){
         this.name = name;
         abilities = new ArrayList<>();
         moves = new ArrayList<>();
         commands = new ArrayList<>();
-
         totalHealth = 500;
         currentHealth = totalHealth;
         attack = 50 + strength;
@@ -52,6 +54,7 @@ public class Fighter{
 
         moves.forEach(m -> commands.add(m.getCommand()));
         brain = new Network(13, commands.size());
+        brain2 = new QLearn();
     }
 
     public void act(){
@@ -61,13 +64,19 @@ public class Fighter{
                 endMove();
             }
         }
-        if(Battle.getTime() % 450 == 0 && currentHealth < totalHealth){
+        if(Battle.getTime() % 500 == 0 && currentHealth < totalHealth){
             currentHealth += regen;
         }
         if(Battle.getTime() % speed == 0 && !inMove){
-            double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection()};
-            int decision = brain.makeDecision(info);
-            newCommand(decision);
+            if(Randomizer.getRgen(100) > sim){
+                double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection()};
+                int decision = brain.makeDecision(info);
+                newCommand(decision);
+                decide = 0;
+            }else{
+                newCommand(Randomizer.getRgen(commands.size()));
+                decide = 1;
+            }
         }
     }
 
@@ -128,7 +137,11 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
-        brain.learn(currentHealth, enemy.getHealth(), lastHealth, lastOpponent);
+        double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection()};
+        brain2.newQValue(new State(info), currentMove);
+        if(decide == 0){
+            brain.learn(brain2.getReward());
+        }
         lastHealth = currentHealth;
         lastOpponent = enemy.getHealth();
     }
@@ -147,5 +160,14 @@ public class Fighter{
 
     public Network getBrain(){
         return brain;
+    }
+
+    public void reset(){
+        currentHealth = totalHealth;
+        brain2.reset();
+    }
+
+    public void setSim(int i){
+        sim = i;
     }
 }

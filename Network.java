@@ -93,8 +93,8 @@ public class Network{
         return getSelection();
     }
 
-    public void learn(double health, double eHealth, double lHealth, double lEHealth){
-        error = (lHealth / lEHealth) - (health / eHealth);
+    public void learn(double error){
+        this.error = error;
         ArrayList<Double> hiddenDelta = new ArrayList<>();
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){

@@ -4,9 +4,11 @@ public class Battle{
     private Fighter f2;
     private static int time;
 
-    public Battle(){
-        f1 = new Fighter("Fighter 1", 100, 0, 10);
-        f2 = new Fighter("Fighter 2", 500, 15, 0);
+    public Battle(Fighter f1, Fighter f2, int i){
+        this.f1 = f1;
+        this.f2 = f2;
+        f1.setSim(i);
+        f2.setSim(i);
         f1.setEnemy(f2);
         f2.setEnemy(f1);
         time = 90000;
@@ -35,7 +37,7 @@ public class Battle{
             System.out.println("Fighter 2 wins!!!");
         }
         try{
-            Thread.sleep(1);
+            Thread.sleep(10);
         }
         catch(Exception e){
             System.out.print(e);
