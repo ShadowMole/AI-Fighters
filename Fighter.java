@@ -164,6 +164,8 @@ public class Fighter{
 
     public void reset(){
         currentHealth = totalHealth;
+        inMove = false;
+        currentMove = null;
         brain2.reset();
     }
 
