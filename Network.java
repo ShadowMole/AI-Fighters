@@ -13,7 +13,7 @@ public class Network{
      * Constructor for objects of class Network
      */
     public Network(int n, int x){
-        input = new Neuron[n];
+        input = new Neuron[n + 2];
         first = new Neuron[10];
         second = new Neuron[10];
         output = new Neuron[x];
@@ -74,6 +74,8 @@ public class Network{
         info[10] = info[10] / 50;
         info[11] = info[11] / 2;
         info[12] = info[12] / 2;
+        info[13] = info[13];
+        info[14] = info[14];
         for(int i = 0; i < input.length; i++){
             input[i].feedforward(info[i]);
             input[i].fire();
@@ -94,7 +96,7 @@ public class Network{
     }
 
     public void learn(double error){
-        this.error = 1 - error;
+        this.error = .1 *(1 - error);
         ArrayList<Double> hiddenDelta = new ArrayList<>();
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){
@@ -165,5 +167,9 @@ public class Network{
             }
         }
         return x;
+    }
+    
+    public double[] getOutputs(){
+        return outputs;
     }
 }

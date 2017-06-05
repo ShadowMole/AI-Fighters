@@ -9,14 +9,16 @@ public class QLearn{
     private HashMap<State,HashMap<Move,Double>> lastValues;
     private HashMap<State,HashMap<Move,Double>> maxValues;
     private double reward;
+    private double qValue;
+    private double maxQValue;
 
     public QLearn(){
         lastEnemy = 500;
         lastHealth = 500;
         lastValues = new HashMap<>();
         maxValues = new HashMap<>();
-        learn = .1;
-        discount = .3;
+        learn = .01;
+        discount = .01;
     }
 
     public boolean checkState(State s, Move m){
@@ -48,11 +50,18 @@ public class QLearn{
     }
 
     public double getQValue(double last, double max){
+        qValue = ((1 - learn) * last) + (learn * (reward + discount * max));
+        maxQValue = max;
         return ((1 - learn) * last) + (learn * (reward + discount * max));
     }
 
     public void calcReward(double health, double enemy){
-        reward = (lastEnemy - enemy) / (lastHealth - health);
+        double top = (lastEnemy - enemy);
+        double bottom = (lastHealth - health);
+        if(bottom == 0){
+            bottom = 1;
+        }
+        reward = top / bottom;
         lastEnemy = enemy;
         lastHealth = health;
     }
@@ -61,13 +70,21 @@ public class QLearn{
         calcReward(s.getHealth(), s.getEnemyHealth());
         checkState(s,m);
     }
-    
+
     public void reset(){
         lastEnemy = 500;
         lastHealth = 500;
     }
-    
+
     public double getReward(){
         return reward;
+    }
+
+    public double getValue(){
+        return qValue;
+    }
+
+    public double getMax(){
+        return maxQValue;
     }
 }
