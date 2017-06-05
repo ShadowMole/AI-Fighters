@@ -174,4 +174,8 @@ public class Fighter{
     public void setSim(int i){
         sim = i;
     }
+    
+    public double getTotalHealth(){
+        return totalHealth;
+    }
 }
