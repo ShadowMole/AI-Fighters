@@ -14,7 +14,7 @@ public class Simulation{
             f2.reset();
             Battle b = new Battle(f1,f2,i);
             double battle = 101 - i;
-            System.out.println("\n ==========Battle #" + battle + "========== \n" );
+            System.out.println("\n ====================Battle #" + battle + "==================== \n" );
             b.run();
         }
     }
