@@ -37,7 +37,7 @@ public class Battle{
             System.out.println("Fighter 2 wins!!!");
         }
         f1.getBrain().learn((f2.getHealth() - f2.getTotalHealth()) / (f1.getHealth() - f1.getTotalHealth()));
-        f1.getBrain().learn((f1.getHealth() - f1.getTotalHealth()) / (f2.getHealth() - f2.getTotalHealth()));
+       // f2.getBrain().learn((f1.getHealth() - f1.getTotalHealth()) / (f2.getHealth() - f2.getTotalHealth()));
         try{
             Thread.sleep(10);
         }

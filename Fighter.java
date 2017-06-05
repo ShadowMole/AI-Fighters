@@ -68,7 +68,7 @@ public class Fighter{
             currentHealth += regen;
         }
         if(Battle.getTime() % speed == 0 && !inMove){
-            if(Randomizer.getRgen(100) > sim){
+            if(Randomizer.getRgen(100) > sim && name.equals("Fighter 1")){
                 double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), brain2.getValue(), brain2.getMax(), Battle.getTime()};
                 int decision = brain.makeDecision(info);
                 newCommand(decision);
