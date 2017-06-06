@@ -11,6 +11,7 @@ public class QLearn{
     private double reward;
     private double qValue;
     private double maxQValue;
+    private double maxReward;
 
     public QLearn(){
         lastEnemy = 500;
@@ -19,6 +20,7 @@ public class QLearn{
         maxValues = new HashMap<>();
         learn = .01;
         discount = .01;
+        maxReward = 0;
     }
 
     public boolean checkState(State s, Move m){
@@ -62,6 +64,9 @@ public class QLearn{
             bottom = 1;
         }
         reward = top / bottom;
+        if(reward > maxReward){
+            maxReward = reward;
+        }
         lastEnemy = enemy;
         lastHealth = health;
     }
@@ -86,5 +91,9 @@ public class QLearn{
 
     public double getMax(){
         return maxQValue;
+    }
+
+    public double getMaxReward(){
+        return maxReward;
     }
 }

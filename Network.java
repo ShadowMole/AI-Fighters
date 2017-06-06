@@ -69,14 +69,12 @@ public class Network{
         info[5] = info[5] / 25;
         info[6] = info[6] / 25;
         info[7] = info[7] / 150;
-        info[8] = info[8] / 150;
-        info[9] = info[9] / 50;
-        info[10] = info[10] / 50;
-        info[11] = info[11] / 2;
-        info[12] = info[12] / 2;
-        info[13] = info[13];
-        info[14] = info[14];
-        info[15] = info[15] / 90000;
+        info[8] = info[8] / 50;
+        info[9] = info[9] / 2;
+        info[10] = info[10] / 2;
+        info[11] = info[11];
+        info[12] = info[12];
+        info[13] = info[13] / 90000;
         for(int i = 0; i < input.length; i++){
             input[i].feedforward(info[i]);
             input[i].fire();
@@ -97,7 +95,7 @@ public class Network{
     }
 
     public void learn(double error){
-        this.error = .1 * (1 - error);
+        this.error = .1 * error;
         ArrayList<Double> hiddenDelta = new ArrayList<>();
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){

@@ -18,7 +18,7 @@ public class Move{
             command = Command.TUESDAY;
             attack = 50;
             defense = 0;
-            time = 700;
+            time = 600;
         }
         if(name.equals("Wednesday")){
             command = Command.WEDNESDAY;
@@ -28,7 +28,7 @@ public class Move{
         }
         if(name.equals("Thursday")){
             command = Command.THURSDAY;
-            attack = 20;
+            attack = 25;
             defense = 25;
             time = 400;
         }
@@ -47,8 +47,8 @@ public class Move{
         if(name.equals("Sunday")){
             command = Command.SUNDAY;
             attack = 20;
-            defense = 50;
-            time = 500;
+            defense = 80;
+            time = 600;
         }
     }
 
