@@ -69,7 +69,7 @@ public class Fighter{
         }
         if(Battle.getTime() % speed == 0 && !inMove){
             if(Randomizer.getRgen(100) > sim){
-                double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), brain2.getValue(), brain2.getMax()};
+                double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), brain2.getValue(), brain2.getMax(), Battle.getTime()};
                 int decision = brain.makeDecision(info);
                 newCommand(decision);
                 decide = 0;
@@ -137,9 +137,11 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
-        double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), brain2.getValue(), brain2.getMax()};
+        double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), getCurrentMoveAttack(), enemy.getCurrentMoveAttack(), getCurrentMoveDefense(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), brain2.getValue(), brain2.getMax(), Battle.getTime()};
         brain2.newQValue(new State(info), currentMove);
-        brain.learn(brain2.getReward());
+        if(decide == 1){
+            brain.learn(brain2.getReward());
+        }
         lastHealth = currentHealth;
         lastOpponent = enemy.getHealth();
     }
@@ -150,9 +152,12 @@ public class Fighter{
             currentHealth -= damage;
             System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
             double[] outputs = enemy.getBrain().getOutputs();
-            /*for(int i = 0; i < outputs.length; i++){
-            System.out.println("Output " + i + ": " + outputs[i]);
-            }?*/
+            /*if(enemy.getDecide() == 0){
+                for(int i = 0; i < outputs.length; i++){
+                    System.out.println("Output " + i + ": " + outputs[i]);
+                }
+                System.out.println("");
+            }*/
         }
     }
 
@@ -168,10 +173,19 @@ public class Fighter{
         currentHealth = totalHealth;
         inMove = false;
         currentMove = null;
+        moveTime = 0;
         brain2.reset();
     }
 
     public void setSim(int i){
         sim = i;
+    }
+
+    public double getTotalHealth(){
+        return totalHealth;
+    }
+    
+    public int getDecide(){
+        return decide;
     }
 }
