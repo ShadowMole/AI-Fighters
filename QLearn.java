@@ -10,7 +10,7 @@ public class QLearn{
     private HashMap<State,HashMap<Move,Double>> maxValues;
     private double reward;
     private double qValue;
-    private double maxQValue;
+    private double maxReward;
 
     public QLearn(){
         lastEnemy = 500;
@@ -19,6 +19,7 @@ public class QLearn{
         maxValues = new HashMap<>();
         learn = .01;
         discount = .01;
+        maxReward = 0;
     }
 
     public boolean checkState(State s, Move m){
@@ -51,7 +52,6 @@ public class QLearn{
 
     public double getQValue(double last, double max){
         qValue = ((1 - learn) * last) + (learn * (reward + discount * max));
-        maxQValue = max;
         return ((1 - learn) * last) + (learn * (reward + discount * max));
     }
 
@@ -62,6 +62,9 @@ public class QLearn{
             bottom = 1;
         }
         reward = top / bottom;
+        if(reward > maxReward){
+            maxReward = reward;
+        }
         lastEnemy = enemy;
         lastHealth = health;
     }
@@ -84,7 +87,20 @@ public class QLearn{
         return qValue;
     }
 
-    public double getMax(){
-        return maxQValue;
+    public HashMap<Move,Double> findState(State s){
+        for(State x : maxValues.keySet()){
+            if(s.equals(x)){
+                HashMap<Move,Double> state = new HashMap<>();
+                for(Move m : maxValues.get(x).keySet()){
+                    state.put(m,((1 - learn) * lastValues.get(x).get(m)) + (learn * (reward + discount * maxValues.get(x).get(m))));
+                }
+                return state;
+            }
+        }
+        return null;
+    }
+
+    public double getError(){
+        return maxReward - reward;
     }
 }

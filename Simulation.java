@@ -9,13 +9,16 @@ public class Simulation{
     }
 
     public void sim(){
-        for(int i = 100; i > 0; i--){
+        for(int i = 10000; i > 0; i--){
             f1.reset();
             f2.reset();
             Battle b = new Battle(f1,f2,i);
-            double battle = 101 - i;
+            double battle = 10001 - i;
             System.out.println("\n ====================Battle #" + battle + "==================== \n" );
             b.run();
         }
+        System.out.println("");
+        System.out.println(f1.getName() + " Wins: " + f1.getWins());
+        System.out.println(f2.getName() + " Wins: " + f2.getWins());
     }
 }
