@@ -39,7 +39,7 @@ public class Neuron{
 
     public double selection(){
         lastInput = sums;
-        activation();
+        //activation();
         lastOutput = sums;
         double answer = sums;
         sums = 0.0;
