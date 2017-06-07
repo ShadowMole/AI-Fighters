@@ -25,6 +25,7 @@ public class Fighter{
     private int sim;
     private int decide;
     private int wins;
+    private double[] picks;
 
     public Fighter(String name, int x, double regen, double strength){
         this.name = name;
@@ -40,6 +41,10 @@ public class Fighter{
         moveTime = 0;
         wins = 0;
         this.regen = regen;
+        picks = new double[7];
+        for(int i = 0; i < picks.length; i++){
+            picks[i] = 0;
+        }
 
         location = new Location(x,0);
         if(x == 100){
@@ -70,10 +75,11 @@ public class Fighter{
             currentHealth += regen;
         }
         if(Battle.getTime() % speed == 0 && !inMove){
-            if(Randomizer.getRgen(10000) > sim && name.equals("Fighter 1")){
-                double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
+            double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
+            if(Randomizer.getRgen(100000000) > sim && name.equals("Fighter 1") && brain2.findState(new State(info)) != null){
                 int decision = brain.makeDecision(info, brain2.findState(new State(info)));
                 newCommand(decision);
+                picks[decision]++;
                 decide = 0;
             }else{
                 newCommand(Randomizer.getRgen(commands.size()));
@@ -152,10 +158,10 @@ public class Fighter{
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
         if(damage >= 0){
             currentHealth -= damage;
-            if(name.equals("Fighter 2") && enemy.getDecide() == 1){
-                System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+            if(enemy.getDecide() == 1){
+                //  System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
             }else{
-                System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                //  System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
             }
             double[] outputs = enemy.getBrain().getOutputs();
             /*if(enemy.getDecide() == 0){
@@ -201,5 +207,9 @@ public class Fighter{
 
     public int getWins(){
         return wins;
+    }
+
+    public double[] getPicks(){
+        return picks;
     }
 }
