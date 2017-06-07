@@ -126,7 +126,7 @@ public class Network{
             }
         }
         int count = 0;
-        for(Neuron n : last){
+        for(Neuron n : second){
             for(Synapse s : n.getConnections()){
                 s.learning(deltaWeights.get(count));
                 count++;
@@ -145,7 +145,7 @@ public class Network{
             }
         }
         count = 0;
-        for(Neuron n : second){
+        for(Neuron n : first){
             for(Synapse s : n.getConnections()){
                 s.learning(deltaWeights.get(count));
                 count++;
@@ -164,7 +164,7 @@ public class Network{
             }
         }
         count = 0;
-        for(Neuron n : first){
+        for(Neuron n : input){
             for(Synapse s : n.getConnections()){
                 s.learning(deltaWeights.get(count));
                 count++;
