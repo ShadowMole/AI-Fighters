@@ -7,6 +7,7 @@ public class Neuron{
     private double bias;
     private double lastInput;
     private double lastOutput;
+    private String command;
 
     public Neuron(int x){
         connections = new ArrayList<>();
@@ -39,9 +40,10 @@ public class Neuron{
 
     public double selection(){
         lastInput = sums;
-        //activation();
+        activation();
         lastOutput = sums;
         double answer = sums;
+        answer *= 10;
         sums = 0.0;
         return answer;
     }
@@ -57,12 +59,20 @@ public class Neuron{
     public double getLastOutput(){
         return lastOutput;
     }
-    
+
     public ArrayList<Synapse> getConnections(){
         return connections;
     }
-    
+
     public double getDeltaOutput(double error){
         return error * primeActivation();
+    }
+
+    public void setCommand(String i){
+        command = i;
+    }
+
+    public String getCommand(){
+        return command;
     }
 }

@@ -21,7 +21,7 @@ public class Synapse{
     }
 
     public void lastLearning(double error){
-        double deltaWeight = last.getLastOutput() * last.getDeltaOutput(error);
+        double deltaWeight = first.getLastOutput() * last.getDeltaOutput(error);
         lastWeight = weights;
         weights += deltaWeight;
     }
