@@ -63,12 +63,19 @@ public class Move{
     public double getAttack(){
         return attack;
     }
-    
+
     public String getName(){
         return name;
     }
-    
+
     public double getDefense(){
         return defense;
+    }
+
+    public boolean equals(Move m){
+        if(name.equals(m.getName())){
+            return true;
+        }
+        return false;
     }
 }

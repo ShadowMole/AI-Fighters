@@ -4,8 +4,6 @@ public class QLearn{
 
     private double learn;
     private double discount;
-    private double lastEnemy;
-    private double lastHealth;
     private HashMap<State,HashMap<Move,Double>> lastValues;
     private HashMap<State,HashMap<Move,Double>> maxValues;
     private double reward;
@@ -13,8 +11,6 @@ public class QLearn{
     private double maxReward;
 
     public QLearn(){
-        lastEnemy = 500;
-        lastHealth = 500;
         lastValues = new HashMap<>();
         maxValues = new HashMap<>();
         learn = .01;
@@ -24,13 +20,15 @@ public class QLearn{
 
     public boolean checkState(State s, Move m){
         for(State x : lastValues.keySet()){
-            if(s.equals(x)){
-                if(checkAction(m, lastValues.get(x), maxValues.get(x))){
-                }else{
-                    lastValues.get(x).put(m, getQValue(0,0));
-                    maxValues.get(x).put(m, getQValue(0,0));
+            for(State y : maxValues.keySet()){
+                if(s.equals(x) && s.equals(y)){
+                    if(checkAction(m, lastValues.get(x), maxValues.get(y))){
+                    }else{
+                        lastValues.get(x).put(m, getQValue(0,0));
+                        maxValues.get(y).put(m, getQValue(0,0));
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;
@@ -38,13 +36,15 @@ public class QLearn{
 
     public boolean checkAction(Move m, HashMap<Move,Double> last, HashMap<Move,Double> max){
         for(Move x : last.keySet()){
-            if(m.equals(x)){
-                double qValue = getQValue(last.get(x), max.get(x));
-                last.replace(x, last.get(x), qValue);
-                if(qValue > max.get(x)){
-                    max.replace(x, max.get(x), qValue);
+            for(Move y : max.keySet()){
+                if(m.equals(x) && m.equals(y)){
+                    double qValue = getQValue(last.get(x), max.get(y));
+                    last.replace(x, last.get(x), qValue);
+                    if(qValue > max.get(y)){
+                        max.replace(y, max.get(y), qValue);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;
@@ -55,9 +55,9 @@ public class QLearn{
         return ((1 - learn) * last) + (learn * (reward + discount * max));
     }
 
-    public void calcReward(double health, double enemy){
-        double top = (lastEnemy - enemy);
-        double bottom = (lastHealth - health);
+    public void calcReward(double health, double enemy, double knew, double newEnemy){
+        double top = (enemy - newEnemy);
+        double bottom = (health - knew);
         if(bottom == 0){
             bottom = 1;
         }
@@ -65,18 +65,11 @@ public class QLearn{
         if(reward > maxReward){
             maxReward = reward;
         }
-        lastEnemy = enemy;
-        lastHealth = health;
     }
 
-    public void newQValue(State s, Move m){
-        calcReward(s.getHealth(), s.getEnemyHealth());
+    public void newQValue(State s, Move m, double newHealth, double enemyHealth){
+        calcReward(s.getHealth(), s.getEnemyHealth(), newHealth, enemyHealth);
         checkState(s,m);
-    }
-
-    public void reset(){
-        lastEnemy = 500;
-        lastHealth = 500;
     }
 
     public double getReward(){
@@ -89,12 +82,18 @@ public class QLearn{
 
     public HashMap<Move,Double> findState(State s){
         for(State x : maxValues.keySet()){
-            if(s.equals(x)){
-                HashMap<Move,Double> state = new HashMap<>();
-                for(Move m : maxValues.get(x).keySet()){
-                    state.put(m,((1 - learn) * lastValues.get(x).get(m)) + (learn * (reward + discount * maxValues.get(x).get(m))));
+            for(State y : lastValues.keySet()){
+                if(s.equals(x) && s.equals(y)){
+                    HashMap<Move,Double> state = new HashMap<>();
+                    for(Move m : maxValues.get(x).keySet()){
+                        for(Move n : lastValues.get(y).keySet()){
+                            if(n.equals(m)){
+                                state.put(m,((1 - learn) * lastValues.get(y).get(n)) + (learn * (reward + discount * maxValues.get(x).get(m))));
+                            }
+                        }
+                    }
+                    return state;
                 }
-                return state;
             }
         }
         return null;
