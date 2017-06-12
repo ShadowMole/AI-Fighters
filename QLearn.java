@@ -18,20 +18,22 @@ public class QLearn{
         maxReward = 0;
     }
 
-    public boolean checkState(State s, Move m){
+    public void checkState(State s, Move m){
         for(State x : lastValues.keySet()){
             for(State y : maxValues.keySet()){
                 if(s.equals(x) && s.equals(y)){
-                    if(checkAction(m, lastValues.get(x), maxValues.get(y))){
-                    }else{
+                    if(!checkAction(m, lastValues.get(x), maxValues.get(y))){
                         lastValues.get(x).put(m, getQValue(0,0));
                         maxValues.get(y).put(m, getQValue(0,0));
                     }
-                    return true;
+                    return;
                 }
             }
         }
-        return false;
+        lastValues.put(s, new HashMap<Move,Double>());
+        maxValues.put(s, new HashMap<Move,Double>());
+        lastValues.get(s).put(m, getQValue(0,0));
+        maxValues.get(s).put(m, getQValue(0,0));
     }
 
     public boolean checkAction(Move m, HashMap<Move,Double> last, HashMap<Move,Double> max){
