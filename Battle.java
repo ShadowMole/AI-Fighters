@@ -25,11 +25,13 @@ public class Battle{
             f1.act();
             f2.act();
             time--;
-            /* if(time % 1000 == 0){
-            System.out.println("Time Left: " + time/1000 + " seconds");
-            System.out.println(f1.getName() + " Health: " + f1.getHealth());
-            System.out.println(f2.getName() + " Health: " + f2.getHealth() + "\n");
-            } */
+            if(sim < 25){
+                if(time % 1000 == 0){
+                    System.out.println("Time Left: " + time/1000 + " seconds");
+                    System.out.println(f1.getName() + " Health: " + f1.getHealth());
+                    System.out.println(f2.getName() + " Health: " + f2.getHealth() + "\n");
+                } 
+            }
         }
         if(sim > 10000000){
             if(time == 0 || (f2.getHealth() <= 0 && f1.getHealth() <= 0)){
