@@ -78,7 +78,7 @@ public class Fighter{
         if(Battle.getTime() % speed == 0 && !inMove){
             double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
             lastState = new State(info);
-            if(sim < 10000000 && name.equals("Fighter 1") && brain2.findState(lastState) != null){
+            if(sim < 1000000 && name.equals("Fighter 1") && brain2.findState(lastState) != null){
                 int decision = brain.makeDecision(info, brain2.findState(new State(info)));
                 newCommand(decision);
                 picks[decision]++;
@@ -148,8 +148,8 @@ public class Fighter{
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
         if(name.equals("Fighter 1")){
-        brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
-    }
+            brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
+        }
         if(decide == 0){
             brain.learn(brain2.getError());
         }
@@ -161,11 +161,13 @@ public class Fighter{
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
         if(damage >= 0){
             currentHealth -= damage;
+            if(sim < 25){
             if(enemy.getDecide() == 1){
-                //  System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                  System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
             }else{
-                //  System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                  System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
             }
+        }
             double[] outputs = enemy.getBrain().getOutputs();
             /*if(enemy.getDecide() == 0){
             for(int i = 0; i < outputs.length; i++){

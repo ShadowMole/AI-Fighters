@@ -20,14 +20,14 @@ public class QLearn{
 
     public void checkState(State s, Move m){
         for(State x : lastValues.keySet()){
-         //   for(State y : maxValues.keySet()){
-                if(s.equals(x)/* && s.equals(y)*/){
-                    if(!checkAction(m, lastValues.get(x), maxValues.get(x))){
-                        lastValues.get(x).put(m, getQValue(0,0));
-                        maxValues.get(x).put(m, getQValue(0,0));
-                    }
-                    return;
-          //      }
+            //   for(State y : maxValues.keySet()){
+            if(s.equals(x)/* && s.equals(y)*/){
+                if(!checkAction(m, lastValues.get(x), maxValues.get(x))){
+                    lastValues.get(x).put(m, getQValue(0,0));
+                    maxValues.get(x).put(m, getQValue(0,0));
+                }
+                return;
+                //      }
             }
         }
         lastValues.put(s, new HashMap<Move,Double>());
@@ -38,15 +38,15 @@ public class QLearn{
 
     public boolean checkAction(Move m, HashMap<Move,Double> last, HashMap<Move,Double> max){
         for(Move x : last.keySet()){
-        //    for(Move y : max.keySet()){
-                if(m.equals(x)/* && m.equals(y)*/){
-                    double qValue = getQValue(last.get(x), max.get(x));
-                    last.replace(x, last.get(x), qValue);
-                    if(qValue > max.get(x)){
-                        max.replace(x, max.get(x), qValue);
-                    }
-                    return true;
-          //      }
+            //    for(Move y : max.keySet()){
+            if(m.equals(x)/* && m.equals(y)*/){
+                double qValue = getQValue(last.get(x), max.get(x));
+                last.replace(x, last.get(x), qValue);
+                if(qValue > max.get(x)){
+                    max.replace(x, max.get(x), qValue);
+                }
+                return true;
+                //      }
             }
         }
         return false;
@@ -84,18 +84,18 @@ public class QLearn{
 
     public HashMap<Move,Double> findState(State s){
         for(State x : maxValues.keySet()){
-            for(State y : lastValues.keySet()){
-                if(s.equals(x) && s.equals(y)){
+          //  for(State y : lastValues.keySet()){
+                if(s.equals(x)/* && s.equals(y)*/){
                     HashMap<Move,Double> state = new HashMap<>();
                     for(Move m : maxValues.get(x).keySet()){
-                        for(Move n : lastValues.get(y).keySet()){
+                        for(Move n : lastValues.get(x).keySet()){
                             if(n.equals(m)){
-                                state.put(m,((1 - learn) * lastValues.get(y).get(n)) + (learn * (reward + discount * maxValues.get(x).get(m))));
+                                state.put(m,((1 - learn) * lastValues.get(x).get(n)) + (learn * (reward + discount * maxValues.get(x).get(m))));
                             }
                         }
                     }
                     return state;
-                }
+              //  }
             }
         }
         return null;
