@@ -39,12 +39,12 @@ public class Network{
             output[i] = new Neuron(x);
         }
         output[0].setCommand("Monday");
-        output[0].setCommand("Tuesday");
-        output[0].setCommand("Wednesday");
-        output[0].setCommand("Thursday");
-        output[0].setCommand("Friday");
-        output[0].setCommand("Saturday");
-        output[0].setCommand("Sunday");
+        output[1].setCommand("Tuesday");
+        output[2].setCommand("Wednesday");
+        output[3].setCommand("Thursday");
+        output[4].setCommand("Friday");
+        output[5].setCommand("Saturday");
+        output[6].setCommand("Sunday");
         outputs = new double[x];
         setConnections(n);
     }

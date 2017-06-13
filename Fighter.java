@@ -147,7 +147,9 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
+        if(name.equals("Fighter 1")){
         brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
+    }
         if(decide == 0){
             brain.learn(brain2.getError());
         }

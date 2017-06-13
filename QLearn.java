@@ -20,14 +20,14 @@ public class QLearn{
 
     public void checkState(State s, Move m){
         for(State x : lastValues.keySet()){
-            for(State y : maxValues.keySet()){
-                if(s.equals(x) && s.equals(y)){
-                    if(!checkAction(m, lastValues.get(x), maxValues.get(y))){
+         //   for(State y : maxValues.keySet()){
+                if(s.equals(x)/* && s.equals(y)*/){
+                    if(!checkAction(m, lastValues.get(x), maxValues.get(x))){
                         lastValues.get(x).put(m, getQValue(0,0));
-                        maxValues.get(y).put(m, getQValue(0,0));
+                        maxValues.get(x).put(m, getQValue(0,0));
                     }
                     return;
-                }
+          //      }
             }
         }
         lastValues.put(s, new HashMap<Move,Double>());
@@ -38,15 +38,15 @@ public class QLearn{
 
     public boolean checkAction(Move m, HashMap<Move,Double> last, HashMap<Move,Double> max){
         for(Move x : last.keySet()){
-            for(Move y : max.keySet()){
-                if(m.equals(x) && m.equals(y)){
-                    double qValue = getQValue(last.get(x), max.get(y));
+        //    for(Move y : max.keySet()){
+                if(m.equals(x)/* && m.equals(y)*/){
+                    double qValue = getQValue(last.get(x), max.get(x));
                     last.replace(x, last.get(x), qValue);
-                    if(qValue > max.get(y)){
-                        max.replace(y, max.get(y), qValue);
+                    if(qValue > max.get(x)){
+                        max.replace(x, max.get(x), qValue);
                     }
                     return true;
-                }
+          //      }
             }
         }
         return false;

@@ -14,7 +14,7 @@ public class Simulation{
             f2.reset();
             Battle b = new Battle(f1,f2,i);
             double battle = 110000001 - i;
-            if(battle % 1000000 == 0){
+            if(battle % 100000 == 0){
                 System.out.println(battle / 1000000);
             }
             // System.out.println("\n ====================Battle #" + battle + "==================== \n" );
