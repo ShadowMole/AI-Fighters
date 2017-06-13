@@ -39,12 +39,12 @@ public class Network{
             output[i] = new Neuron(x);
         }
         output[0].setCommand("Monday");
-        output[0].setCommand("Tuesday");
-        output[0].setCommand("Wednesday");
-        output[0].setCommand("Thursday");
-        output[0].setCommand("Friday");
-        output[0].setCommand("Saturday");
-        output[0].setCommand("Sunday");
+        output[1].setCommand("Tuesday");
+        output[2].setCommand("Wednesday");
+        output[3].setCommand("Thursday");
+        output[4].setCommand("Friday");
+        output[5].setCommand("Saturday");
+        output[6].setCommand("Sunday");
         outputs = new double[x];
         setConnections(n);
     }
@@ -116,57 +116,43 @@ public class Network{
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){
                 s.lastLearning(error);
-                hiddenDelta.add(s.getHiddenDelta(error));
+                hiddenDelta.add(s.getHiddenDelta());
             }
         }
-        ArrayList<Double> deltaWeights = new ArrayList<>();
-        for(Neuron n : second){
-            for(Double d : hiddenDelta){
-                deltaWeights.add(n.getLastInput() * d);
-            }
+        double deltaOutput = 0;
+        int i = 0;
+        for(Neuron n : output){
+            deltaOutput += n.getDeltaOutput(error);
+            i++;
         }
+        deltaOutput /= i;
         int count = 0;
         for(Neuron n : second){
             for(Synapse s : n.getConnections()){
-                s.learning(deltaWeights.get(count));
+                if(count == hiddenDelta.size()){
+                    count = 0;
+                }
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
-            }
-        }
-        hiddenDelta = new ArrayList<>();
-        for(Neuron n : second){
-            for(Synapse s : n.getConnections()){
-                hiddenDelta.add(s.getHiddenDelta(error));
-            }
-        }
-        deltaWeights = new ArrayList<>();
-        for(Neuron n : first){
-            for(Double d : hiddenDelta){
-                deltaWeights.add(n.getLastInput() * d);
             }
         }
         count = 0;
         for(Neuron n : first){
             for(Synapse s : n.getConnections()){
-                s.learning(deltaWeights.get(count));
+                if(count == hiddenDelta.size()){
+                    count = 0;
+                }
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
-            }
-        }
-        hiddenDelta = new ArrayList<>();
-        for(Neuron n : first){
-            for(Synapse s : n.getConnections()){
-                hiddenDelta.add(s.getHiddenDelta(error));
-            }
-        }
-        deltaWeights = new ArrayList<>();
-        for(Neuron n : second){
-            for(Double d : hiddenDelta){
-                deltaWeights.add(n.getLastInput() * d);
             }
         }
         count = 0;
         for(Neuron n : input){
             for(Synapse s : n.getConnections()){
-                s.learning(deltaWeights.get(count));
+                if(count == hiddenDelta.size()){
+                    count = 0;
+                }
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
             }
         }
