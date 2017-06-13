@@ -9,12 +9,15 @@ public class Simulation{
     }
 
     public void sim(){
-        for(int i = 100000000; i > 0; i--){
+        for(int i = 110000000; i > 0; i--){
             f1.reset();
             f2.reset();
             Battle b = new Battle(f1,f2,i);
-            double battle = 100000001 - i;
-           // System.out.println("\n ====================Battle #" + battle + "==================== \n" );
+            double battle = 110000001 - i;
+            if(battle % 100000 == 0){
+                System.out.println(battle / 1000000);
+            }
+            // System.out.println("\n ====================Battle #" + battle + "==================== \n" );
             b.run();
         }
         System.out.println("");

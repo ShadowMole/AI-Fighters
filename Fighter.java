@@ -26,6 +26,7 @@ public class Fighter{
     private int decide;
     private int wins;
     private double[] picks;
+    private State lastState;
 
     public Fighter(String name, int x, double regen, double strength){
         this.name = name;
@@ -76,7 +77,8 @@ public class Fighter{
         }
         if(Battle.getTime() % speed == 0 && !inMove){
             double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
-            if(Randomizer.getRgen(100000000) > sim && name.equals("Fighter 1") && brain2.findState(new State(info)) != null){
+            lastState = new State(info);
+            if(sim < 10000000 && name.equals("Fighter 1") && brain2.findState(lastState) != null){
                 int decision = brain.makeDecision(info, brain2.findState(new State(info)));
                 newCommand(decision);
                 picks[decision]++;
@@ -145,8 +147,9 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
-        double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
-        brain2.newQValue(new State(info), currentMove);
+        if(name.equals("Fighter 1")){
+        brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
+    }
         if(decide == 0){
             brain.learn(brain2.getError());
         }
@@ -186,7 +189,6 @@ public class Fighter{
         inMove = false;
         currentMove = null;
         moveTime = 0;
-        brain2.reset();
     }
 
     public void setSim(int i){
