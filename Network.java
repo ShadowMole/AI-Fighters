@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 public class Network{
 
     private Neuron[] input;
@@ -13,26 +14,37 @@ public class Network{
      * Constructor for objects of class Network
      */
     public Network(int n, int x){
-        input = new Neuron[n + 3];
+        input = new Neuron[n];
         first = new Neuron[10];
         second = new Neuron[10];
         output = new Neuron[x];
         last = new Neuron[x];
         for(int i = 0; i < input.length; i++){
             input[i] = new Neuron(x);
+            input[i].setCommand("");
         }
         for(int i = 0; i < first.length; i++){
             first[i] = new Neuron(x);
+            first[i].setCommand("");
         }
         for(int i = 0; i < second.length; i++){
             second[i] = new Neuron(x);
+            second[i].setCommand("");
         }
         for(int i = 0; i < last.length; i++){
             last[i] = new Neuron(x);
+            last[i].setCommand("");
         }
         for(int i = 0; i < output.length; i++){
             output[i] = new Neuron(x);
         }
+        output[0].setCommand("Monday");
+        output[1].setCommand("Tuesday");
+        output[2].setCommand("Wednesday");
+        output[3].setCommand("Thursday");
+        output[4].setCommand("Friday");
+        output[5].setCommand("Saturday");
+        output[6].setCommand("Sunday");
         outputs = new double[x];
         setConnections(n);
     }
@@ -60,7 +72,7 @@ public class Network{
         } 
     }
 
-    public int makeDecision(double[] info){
+    public int makeDecision(double[] info, HashMap<Move,Double> state){
         info[0] = info[0] / 600;
         info[1] = info[1] / 500;
         info[2] = info[2] / 500;
@@ -69,14 +81,10 @@ public class Network{
         info[5] = info[5] / 25;
         info[6] = info[6] / 25;
         info[7] = info[7] / 150;
-        info[8] = info[8] / 150;
-        info[9] = info[9] / 50;
-        info[10] = info[10] / 50;
-        info[11] = info[11] / 2;
-        info[12] = info[12] / 2;
-        info[13] = info[13];
-        info[14] = info[14];
-        info[15] = info[15] / 90000;
+        info[8] = info[8] / 50;
+        info[9] = info[9] / 2;
+        info[10] = info[10] / 2;
+        info[11] = info[11] / 90000;
         for(int i = 0; i < input.length; i++){
             input[i].feedforward(info[i]);
             input[i].fire();
@@ -90,69 +98,61 @@ public class Network{
         for(Neuron n : last){
             n.fire();
         }
-        for(int i = 0; i < output.length; i++){
-            outputs[i] = output[i].selection();
+        if(state != null){
+            for(int i = 0; i < output.length; i++){
+                outputs[i] = checkNeuron(state, output[i]);
+            }
+        }else{
+            for(int i = 0; i < output.length; i++){
+                outputs[i] = output[i].selection();
+            }
         }
         return getSelection();
     }
 
     public void learn(double error){
-        this.error = .1 * (1 - error);
+        this.error = error;
         ArrayList<Double> hiddenDelta = new ArrayList<>();
         for(Neuron n : last){
             for(Synapse s : n.getConnections()){
                 s.lastLearning(error);
-                hiddenDelta.add(s.getHiddenDelta(error));
+                hiddenDelta.add(s.getHiddenDelta());
             }
         }
-        ArrayList<Double> deltaWeights = new ArrayList<>();
-        for(Neuron n : second){
-            for(Double d : hiddenDelta){
-                deltaWeights.add(n.getLastInput() * d);
-            }
+        double deltaOutput = 0;
+        int i = 0;
+        for(Neuron n : output){
+            deltaOutput += n.getDeltaOutput(error);
+            i++;
         }
+        deltaOutput /= i;
         int count = 0;
-        for(Neuron n : last){
+        for(Neuron n : second){
             for(Synapse s : n.getConnections()){
-                s.learning(deltaWeights.get(count));
+                if(count == hiddenDelta.size()){
+                    count = 0;
+                }
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
-            }
-        }
-        hiddenDelta = new ArrayList<>();
-        for(Neuron n : second){
-            for(Synapse s : n.getConnections()){
-                hiddenDelta.add(s.getHiddenDelta(error));
-            }
-        }
-        deltaWeights = new ArrayList<>();
-        for(Neuron n : first){
-            for(Double d : hiddenDelta){
-                deltaWeights.add(n.getLastInput() * d);
-            }
-        }
-        count = 0;
-        for(Neuron n : second){
-            for(Synapse s : n.getConnections()){
-                s.learning(deltaWeights.get(count));
-                count++;
-            }
-        }
-        hiddenDelta = new ArrayList<>();
-        for(Neuron n : first){
-            for(Synapse s : n.getConnections()){
-                hiddenDelta.add(s.getHiddenDelta(error));
-            }
-        }
-        deltaWeights = new ArrayList<>();
-        for(Neuron n : second){
-            for(Double d : hiddenDelta){
-                deltaWeights.add(n.getLastInput() * d);
             }
         }
         count = 0;
         for(Neuron n : first){
             for(Synapse s : n.getConnections()){
-                s.learning(deltaWeights.get(count));
+                if(count == hiddenDelta.size()){
+                    count = 0;
+                }
+                s.learning(hiddenDelta.get(count), deltaOutput);
+                count++;
+            }
+        }
+        count = 0;
+        for(Neuron n : input){
+            for(Synapse s : n.getConnections()){
+                if(count == hiddenDelta.size()){
+                    count = 0;
+                }
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
             }
         }
@@ -169,8 +169,18 @@ public class Network{
         }
         return x;
     }
-    
+
     public double[] getOutputs(){
         return outputs;
+    }
+
+    public double checkNeuron(HashMap<Move,Double> state, Neuron n){
+        for(Move a : state.keySet()){
+            if(n.getCommand().equals(a.getName())){
+                return n.selection() * state.get(a);
+            }
+        }
+        double delete = n.selection();
+        return 0;
     }
 }

@@ -7,12 +7,11 @@ public class State {
     private double enemyAttack;
     private double defense;
     private double enemyDefense;
-    private double moveAtk;
     private double enemyMoveAtk;
-    private double moveDef;
     private double enemyMoveDef;
     private double dir;
     private double enemyDir;
+    private double time;
 
     public State(double[] info){
         distance = info[0];
@@ -22,12 +21,11 @@ public class State {
         enemyAttack = info[4];
         defense = info[5];
         enemyDefense = info[6];
-        moveAtk = info[7];
-        enemyMoveAtk = info[8];
-        moveDef = info[9];
-        enemyMoveDef = info[10];
-        dir = info[11];
-        enemyDir = info[12];
+        enemyMoveAtk = info[7];
+        enemyMoveDef = info[8];
+        dir = info[9];
+        enemyDir = info[10];
+        time = info[11];
     }
 
     public double getDistance(){
@@ -58,16 +56,8 @@ public class State {
         return enemyDefense;
     }
 
-    public double getMoveAtk(){
-        return moveAtk;
-    }
-
     public double getEnemyMoveAtk(){
         return enemyMoveAtk;
-    }
-
-    public double getMoveDef(){
-        return moveDef;
     }
 
     public double getEnemyMoveDef(){
@@ -81,9 +71,13 @@ public class State {
     public double getEnemyDir(){
         return enemyDir;
     }
+    
+    public double getTime(){
+        return time;
+    }
 
     public boolean equals(State s){
-        if(distance == s.getDistance() && health == s.getHealth() && enemyHealth == s.getEnemyHealth() && attack == s.getAttack() && enemyAttack == s.getEnemyAttack() && defense == s.getDefense() && moveAtk == s.getMoveAtk() && enemyMoveAtk == s.getEnemyMoveAtk() && moveDef == s.getMoveDef() && enemyMoveDef == s.getEnemyMoveDef() && dir == s.getDir() && enemyDir == s.getEnemyDir()){
+        if(distance == s.getDistance() && health == s.getHealth() && enemyHealth == s.getEnemyHealth() && attack == s.getAttack() && enemyAttack == s.getEnemyAttack() && defense == s.getDefense() && enemyMoveAtk == s.getEnemyMoveAtk() && enemyMoveDef == s.getEnemyMoveDef() && dir == s.getDir() && enemyDir == s.getEnemyDir() && time == s.getTime()){
             return true;
         }
         return false;
