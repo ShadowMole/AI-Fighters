@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService; 
+import java.util.HashMap;
 
 public class Fighter{
 
@@ -30,9 +31,10 @@ public class Fighter{
     private double[] picks;
     private State lastState;
     private ExecutorService executor;
+    private HashMap<Move, Double> values;
 
     public Fighter(String name, int x, double regen, double strength){
-        executor = Executors.newFixedThreadPool(10);
+        executor = Executors.newFixedThreadPool(20);
         this.name = name;
         abilities = new ArrayList<>();
         moves = new ArrayList<>();
@@ -82,8 +84,10 @@ public class Fighter{
         if(Battle.getTime() % speed == 0 && !inMove){
             double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
             lastState = new State(info);
-            if(sim < 1000000 && name.equals("Fighter 1") && brain2.findState(lastState) != null){
-                int decision = brain.makeDecision(info, brain2.findState(new State(info)));
+            Runnable thread = new VThread(this, brain2, lastState);
+            executor.execute(thread);
+            if(sim < 1000000 && name.equals("Fighter 1") && values != null){
+                int decision = brain.makeDecision(info, values);
                 newCommand(decision);
                 picks[decision]++;
                 decide = 0;
@@ -221,5 +225,9 @@ public class Fighter{
 
     public double[] getPicks(){
         return picks;
+    }
+
+    public void setValues(HashMap<Move, Double> values){
+        this.values = values;
     }
 }

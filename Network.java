@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+
 public class Network{
 
     private Neuron[] input;
@@ -9,11 +12,13 @@ public class Network{
     private Neuron[] output;
     private double error;
     private double[] outputs;
+    private ExecutorService executor;
 
     /**
      * Constructor for objects of class Network
      */
     public Network(int n, int x){
+        executor = Executors.newFixedThreadPool(20);
         input = new Neuron[n];
         first = new Neuron[10];
         second = new Neuron[10];
@@ -132,7 +137,8 @@ public class Network{
                 if(count == hiddenDelta.size()){
                     count = 0;
                 }
-                s.learning(hiddenDelta.get(count), deltaOutput);
+                Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
+                executor.execute(thread);
                 count++;
             }
         }
@@ -142,7 +148,8 @@ public class Network{
                 if(count == hiddenDelta.size()){
                     count = 0;
                 }
-                s.learning(hiddenDelta.get(count), deltaOutput);
+                Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
+                executor.execute(thread);
                 count++;
             }
         }
@@ -152,7 +159,8 @@ public class Network{
                 if(count == hiddenDelta.size()){
                     count = 0;
                 }
-                s.learning(hiddenDelta.get(count), deltaOutput);
+                Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
+                executor.execute(thread);
                 count++;
             }
         }
