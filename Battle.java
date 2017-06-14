@@ -25,7 +25,7 @@ public class Battle{
             f1.act();
             f2.act();
             time--;
-            if(sim < 25){
+            if(sim <= 25){
                 if(time % 1000 == 0){
                     System.out.println("Time Left: " + time/1000 + " seconds");
                     System.out.println(f1.getName() + " Health: " + f1.getHealth());
@@ -33,14 +33,20 @@ public class Battle{
                 } 
             }
         }
-        if(sim > 10000000){
+        if(sim < 10000000){
             if(time == 0 || (f2.getHealth() <= 0 && f1.getHealth() <= 0)){
-                //       System.out.println("There is a tie.");
+                if(sim <= 25){
+                    System.out.println("There is a tie.");
+                }
             }else if(f2.getHealth() <= 0){
-                //     System.out.println("Fighter 1 wins!!!");
+                if(sim <= 25){
+                    System.out.println("Fighter 1 wins!!!");
+                }
                 f1.incWins();
             }else if(f1.getHealth() <= 0){
-                //     System.out.println("Fighter 2 wins!!!");
+                if(sim <= 25){
+                    System.out.println("Fighter 2 wins!!!");
+                }
                 f2.incWins();
             } 
         }

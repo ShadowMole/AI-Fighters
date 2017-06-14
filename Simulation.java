@@ -17,7 +17,7 @@ public class Simulation{
             if(battle % 100000 == 0){
                 System.out.println(battle / 100000);
             }
-            if(i < 25){
+            if(i <= 25){
                 System.out.println("\n ====================Battle #" + battle + "==================== \n" );
             }    
             b.run();
