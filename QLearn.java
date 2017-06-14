@@ -1,25 +1,30 @@
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Iterator;
 import java.util.HashMap;
 
 public class QLearn{
 
     private double learn;
     private double discount;
-    private HashMap<State,HashMap<Move,Double>> lastValues;
-    private HashMap<State,HashMap<Move,Double>> maxValues;
+    private ConcurrentHashMap<State,ConcurrentHashMap<Move,Double>> lastValues;
+    private ConcurrentHashMap<State,ConcurrentHashMap<Move,Double>> maxValues;
     private double reward;
     private double qValue;
     private double maxReward;
 
     public QLearn(){
-        lastValues = new HashMap<>();
-        maxValues = new HashMap<>();
+        lastValues = new ConcurrentHashMap<>();
+        maxValues = new ConcurrentHashMap<>();
         learn = .01;
         discount = .01;
         maxReward = 0;
     }
 
     public void checkState(State s, Move m){
-        for(State x : lastValues.keySet()){
+        Iterator i = lastValues.keySet().iterator();
+        while(i.hasNext()){
+            State x = (State) i.next();
+            //for(State x : lastValues.keySet()){
             //   for(State y : maxValues.keySet()){
             if(s.equals(x)/* && s.equals(y)*/){
                 if(!checkAction(m, lastValues.get(x), maxValues.get(x))){
@@ -30,13 +35,13 @@ public class QLearn{
                 //      }
             }
         }
-        lastValues.put(s, new HashMap<Move,Double>());
-        maxValues.put(s, new HashMap<Move,Double>());
+        lastValues.put(s, new ConcurrentHashMap<Move,Double>());
+        maxValues.put(s, new ConcurrentHashMap<Move,Double>());
         lastValues.get(s).put(m, getQValue(0,0));
         maxValues.get(s).put(m, getQValue(0,0));
     }
 
-    public boolean checkAction(Move m, HashMap<Move,Double> last, HashMap<Move,Double> max){
+    public boolean checkAction(Move m, ConcurrentHashMap<Move,Double> last, ConcurrentHashMap<Move,Double> max){
         for(Move x : last.keySet()){
             //    for(Move y : max.keySet()){
             if(m.equals(x)/* && m.equals(y)*/){
@@ -84,18 +89,18 @@ public class QLearn{
 
     public HashMap<Move,Double> findState(State s){
         for(State x : maxValues.keySet()){
-          //  for(State y : lastValues.keySet()){
-                if(s.equals(x)/* && s.equals(y)*/){
-                    HashMap<Move,Double> state = new HashMap<>();
-                    for(Move m : maxValues.get(x).keySet()){
-                        for(Move n : lastValues.get(x).keySet()){
-                            if(n.equals(m)){
-                                state.put(m,((1 - learn) * lastValues.get(x).get(n)) + (learn * (reward + discount * maxValues.get(x).get(m))));
-                            }
+            //  for(State y : lastValues.keySet()){
+            if(s.equals(x)/* && s.equals(y)*/){
+                HashMap<Move,Double> state = new HashMap<>();
+                for(Move m : maxValues.get(x).keySet()){
+                    for(Move n : lastValues.get(x).keySet()){
+                        if(n.equals(m)){
+                            state.put(m,((1 - learn) * lastValues.get(x).get(n)) + (learn * (reward + discount * maxValues.get(x).get(m))));
                         }
                     }
-                    return state;
-              //  }
+                }
+                return state;
+                //  }
             }
         }
         return null;

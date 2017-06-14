@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService; 
 
 public class Fighter{
 
@@ -27,8 +29,10 @@ public class Fighter{
     private int wins;
     private double[] picks;
     private State lastState;
+    private ExecutorService executor;
 
     public Fighter(String name, int x, double regen, double strength){
+        executor = Executors.newFixedThreadPool(10);
         this.name = name;
         abilities = new ArrayList<>();
         moves = new ArrayList<>();
@@ -148,7 +152,9 @@ public class Fighter{
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
         if(name.equals("Fighter 1")){
-            brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
+            Runnable thread = new QThread(brain2, lastState, currentMove, currentHealth, enemy.getHealth());
+            executor.execute(thread);
+            // brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
         }
         if(decide == 0){
             brain.learn(brain2.getError());
@@ -161,13 +167,13 @@ public class Fighter{
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
         if(damage >= 0){
             currentHealth -= damage;
-            if(sim < 25){
-            if(enemy.getDecide() == 1){
-                  System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
-            }else{
-                  System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+            if(sim <= 25){
+                if(enemy.getDecide() == 1){
+                    System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                }else{
+                    System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                }
             }
-        }
             double[] outputs = enemy.getBrain().getOutputs();
             /*if(enemy.getDecide() == 0){
             for(int i = 0; i < outputs.length; i++){
