@@ -1,8 +1,8 @@
 public class State {
 
     private double distance;
-    private double health;
-    private double enemyHealth;
+    private int health;
+    private int enemyHealth;
     private double attack;
     private double enemyAttack;
     private double defense;
@@ -15,8 +15,8 @@ public class State {
 
     public State(double[] info){
         distance = info[0];
-        health = info[1];
-        enemyHealth = info[2];
+        health = (int) info[1] / 10;
+        enemyHealth = (int) info[2] / 10;
         attack = info[3];
         enemyAttack = info[4];
         defense = info[5];
@@ -32,11 +32,11 @@ public class State {
         return distance;
     }
     
-    public double getHealth(){
+    public int getHealth(){
         return health;
     }
     
-    public double getEnemyHealth(){
+    public int getEnemyHealth(){
         return enemyHealth;
     }
 
