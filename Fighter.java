@@ -10,7 +10,6 @@ public class Fighter{
     private double attack;  //Damage done by Fighter
     private double defense;  //Damage negated by Fighter
     private int speed;  //How fast the Fighter takes actions and moves
-    private Location location;  //Location of Fighter
     private ArrayList<Ability> abilities;  //Powers and Equipment of Fighter
     private ArrayList<Move> moves;  //Moves available to Fighter
     private ArrayList<Command> commands;  //Commands to use moves
@@ -19,7 +18,6 @@ public class Fighter{
     private Fighter enemy;
     private String name;
     private Move currentMove;
-    private double direction;
     private boolean inMove;
     private int moveTime;
     private double regen;
@@ -29,12 +27,12 @@ public class Fighter{
     private int decide;
     private int wins;
     private double[] picks;
-    private State lastState;
+    private Status lastState;
     private ExecutorService executor;
     private HashMap<Move, Double> values;
 
-    public Fighter(String name, int x, double regen, double strength){
-        executor = Executors.newFixedThreadPool(20);
+    public Fighter(String name, double regen, double strength){
+        executor = Executors.newFixedThreadPool(5);
         this.name = name;
         abilities = new ArrayList<>();
         moves = new ArrayList<>();
@@ -53,21 +51,14 @@ public class Fighter{
             picks[i] = 0;
         }
 
-        location = new Location(x,0);
-        if(x == 100){
-            direction = 1;
-        }else{
-            direction = 2;
-        }
-
-        abilities.add(new Ability("Week"));
+        abilities.add(new Ability("Moves"));
 
         abilities.forEach(a -> {
                 a.getMoveSet().forEach(m -> moves.add(m));
             });
 
         moves.forEach(m -> commands.add(m.getCommand()));
-        brain = new Network(11, commands.size());
+        brain = new Network(9, commands.size());
         brain2 = new QLearn();
     }
 
@@ -82,11 +73,11 @@ public class Fighter{
             currentHealth += regen;
         }
         if(Battle.getTime() % speed == 0 && !inMove){
-            double[] info = {Math.sqrt(((location.getCol() - enemy.getLocation().getCol())*(location.getCol() - enemy.getLocation().getCol()))/((location.getRow() - enemy.getLocation().getRow()) * (location.getRow() - enemy.getLocation().getRow()))), currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), direction, enemy.getDirection(), Battle.getTime()};
-            lastState = new State(info);
+            double[] info = {currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), Battle.getTime()};
+            lastState = new Status(info);
             Runnable thread = new VThread(this, brain2, lastState);
             executor.execute(thread);
-            if(sim < 1000000 && name.equals("Fighter 1") && values != null){
+            if(name.equals("Fighter 1") && values != null){
                 int decision = brain.makeDecision(info, values);
                 newCommand(decision);
                 picks[decision]++;
@@ -96,10 +87,6 @@ public class Fighter{
                 decide = 1;
             } 
         }
-    }
-
-    public Location getLocation(){
-        return location;
     }
 
     public double getHealth(){
@@ -128,10 +115,6 @@ public class Fighter{
         }else{
             return currentMove.getDefense();
         }
-    }
-
-    public double getDirection(){
-        return direction;
     }
 
     public void setEnemy(Fighter f){

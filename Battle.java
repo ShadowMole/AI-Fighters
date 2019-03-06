@@ -33,7 +33,7 @@ public class Battle{
                 } 
             }
         }
-        if(sim < 1000000){
+        if(sim < 500000){
             if(time == 0 || (f2.getHealth() <= 0 && f1.getHealth() <= 0)){
                 if(sim <= 25){
                     System.out.println("There is a tie.");

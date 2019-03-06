@@ -1,7 +1,7 @@
 import java.util.concurrent.ExecutorService;  
 import java.util.concurrent.Executors;  
 
-class NThread implements Runnable { 
+class NThread extends Thread{ 
 
     private Synapse s;
     private double a;
@@ -14,6 +14,8 @@ class NThread implements Runnable {
     }  
 
     public void run() {  
-         s.learning(a,b);
+        s.learning(a,b);
+        Thread.currentThread().interrupt();
+        return;
     }  
 }  

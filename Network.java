@@ -18,7 +18,7 @@ public class Network{
      * Constructor for objects of class Network
      */
     public Network(int n, int x){
-        executor = Executors.newFixedThreadPool(20);
+        executor = Executors.newFixedThreadPool(5);
         input = new Neuron[n];
         first = new Neuron[10];
         second = new Neuron[10];
@@ -78,18 +78,15 @@ public class Network{
     }
 
     public int makeDecision(double[] info, HashMap<Move,Double> state){
-        info[0] = info[0] / 600;
+        info[0] = info[0] / 500;
         info[1] = info[1] / 500;
-        info[2] = info[2] / 500;
-        info[3] = info[3] / 60;
-        info[4] = info[4] / 60;
+        info[2] = info[2] / 50;
+        info[3] = info[3] / 50;
+        info[4] = info[4] / 25;
         info[5] = info[5] / 25;
-        info[6] = info[6] / 25;
-        info[7] = info[7] / 150;
-        info[8] = info[8] / 50;
-        info[9] = info[9] / 2;
-        info[10] = info[10] / 2;
-        info[11] = info[11] / 90000;
+        info[6] = info[6] / 100;
+        info[7] = info[7] / 100;
+        info[8] = info[8] / 90000;
         for(int i = 0; i < input.length; i++){
             input[i].feedforward(info[i]);
             input[i].fire();

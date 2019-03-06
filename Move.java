@@ -8,46 +8,46 @@ public class Move{
 
     public Move(String name){
         this.name = name;
-        if(name.equals("Monday")){
+        if(name.equals("Uppercut")){
             command = Command.MONDAY;
-            attack = 150;
+            attack = 100;
             defense = 0;
-            time = 2000;
+            time = 1200;
         }
-        if(name.equals("Tuesday")){
+        if(name.equals("Cross")){
             command = Command.TUESDAY;
             attack = 50;
             defense = 0;
-            time = 600;
+            time = 400;
         }
-        if(name.equals("Wednesday")){
+        if(name.equals("Shielded Cross")){
             command = Command.WEDNESDAY;
-            attack = 60;
+            attack = 50;
             defense = 25;
             time = 800;
         }
-        if(name.equals("Thursday")){
+        if(name.equals("Quick Block")){
             command = Command.THURSDAY;
-            attack = 25;
-            defense = 25;
-            time = 400;
-        }
-        if(name.equals("Friday")){
-            command = Command.FRIDAY;
-            attack = 15;
-            defense = 40;
+            attack = 0;
+            defense = 75;
             time = 200;
         }
-        if(name.equals("Saturday")){
+        if(name.equals("Full Block")){
+            command = Command.FRIDAY;
+            attack = 0;
+            defense = 100;
+            time = 1000;
+        }
+        if(name.equals("Jab")){
             command = Command.SATURDAY;
             attack = 10;
-            defense = 40;
+            defense = 0;
             time = 100;
         }
-        if(name.equals("Sunday")){
+        if(name.equals("Shielded Jab")){
             command = Command.SUNDAY;
             attack = 20;
-            defense = 80;
+            defense = 50;
             time = 600;
         }
     }

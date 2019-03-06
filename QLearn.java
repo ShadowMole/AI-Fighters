@@ -6,8 +6,8 @@ public class QLearn{
 
     private double learn;
     private double discount;
-    private ConcurrentHashMap<State,ConcurrentHashMap<Move,Double>> lastValues;
-    private ConcurrentHashMap<State,ConcurrentHashMap<Move,Double>> maxValues;
+    private ConcurrentHashMap<Status,ConcurrentHashMap<Move,Double>> lastValues;
+    private ConcurrentHashMap<Status,ConcurrentHashMap<Move,Double>> maxValues;
     private double reward;
     private double qValue;
     private double maxReward;
@@ -20,10 +20,10 @@ public class QLearn{
         maxReward = 0;
     }
 
-    public void checkState(State s, Move m){
+    public void checkState(Status s, Move m){
         Iterator i = lastValues.keySet().iterator();
         while(i.hasNext()){
-            State x = (State) i.next();
+            Status x = (Status) i.next();
             //for(State x : lastValues.keySet()){
             //   for(State y : maxValues.keySet()){
             if(s.equals(x)/* && s.equals(y)*/){
@@ -74,7 +74,7 @@ public class QLearn{
         }
     }
 
-    public void newQValue(State s, Move m, double newHealth, double enemyHealth){
+    public void newQValue(Status s, Move m, double newHealth, double enemyHealth){
         calcReward(s.getHealth(), s.getEnemyHealth(), newHealth, enemyHealth);
         checkState(s,m);
     }
@@ -87,8 +87,8 @@ public class QLearn{
         return qValue;
     }
 
-    public HashMap<Move,Double> findState(State s){
-        for(State x : maxValues.keySet()){
+    public HashMap<Move,Double> findState(Status s){
+        for(Status x : maxValues.keySet()){
             //  for(State y : lastValues.keySet()){
             if(s.equals(x)/* && s.equals(y)*/){
                 HashMap<Move,Double> state = new HashMap<>();

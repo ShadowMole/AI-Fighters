@@ -7,14 +7,14 @@ public class Ability{
     public Ability(String type){
         this.type = type;
         moveSet = new ArrayList<>();
-        if(type.equals("Week")){
-            moveSet.add(new Move("Monday"));
-            moveSet.add(new Move("Tuesday"));
-            moveSet.add(new Move("Wednesday"));
-            moveSet.add(new Move("Thursday"));
-            moveSet.add(new Move("Friday"));
-            moveSet.add(new Move("Saturday"));
-            moveSet.add(new Move("Sunday"));
+        if(type.equals("Moves")){
+            moveSet.add(new Move("Uppercut"));
+            moveSet.add(new Move("Cross"));
+            moveSet.add(new Move("Shielded Cross"));
+            moveSet.add(new Move("Quick Block"));
+            moveSet.add(new Move("Full Block"));
+            moveSet.add(new Move("Jab"));
+            moveSet.add(new Move("Shielded Jab"));
         }
     }
 

@@ -1,20 +1,18 @@
-import java.util.concurrent.ExecutorService;  
-import java.util.concurrent.Executors;  
-import java.util.HashMap;
-
-class VThread implements Runnable { 
+public class VThread extends Thread{
 
     private Fighter f;
     private QLearn q;
-    private State s;
+    private Status s;
 
-    public VThread(Fighter f, QLearn q, State s){  
+    public VThread(Fighter f, QLearn q, Status s){
         this.q = q;
         this.s = s;
         this.f = f;
     }  
 
     public void run() {  
-       f.setValues(q.findState(s));
+        f.setValues(q.findState(s));
+        Thread.currentThread().interrupt();
+        return;
     }  
 }  
