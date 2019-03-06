@@ -43,13 +43,13 @@ public class Network{
         for(int i = 0; i < output.length; i++){
             output[i] = new Neuron(x);
         }
-        output[0].setCommand("Monday");
-        output[1].setCommand("Tuesday");
-        output[2].setCommand("Wednesday");
-        output[3].setCommand("Thursday");
-        output[4].setCommand("Friday");
-        output[5].setCommand("Saturday");
-        output[6].setCommand("Sunday");
+        output[0].setCommand("Uppercut");
+        output[1].setCommand("Cross");
+        output[2].setCommand("Shielded Cross");
+        output[3].setCommand("Quick Block");
+        output[4].setCommand("Fulll Block");
+        output[5].setCommand("Jab");
+        output[6].setCommand("Shielded Jab");
         outputs = new double[x];
         setConnections(n);
     }
