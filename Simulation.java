@@ -15,8 +15,17 @@ public class Simulation{
             f2.reset();
             Battle b = new Battle(f1,f2,i);
             double battle = times + 1 - i;
-            if(battle % 1000 == 0){
-                System.out.println(battle / 1000);
+            if(battle % 100 == 0){
+                System.out.println(battle / 100);
+                System.out.println(f1.getName() + " wins " + (100.0 * f1.getWins() / (1.0 * f1.getWins() + 1.0 * f2.getWins())) + "% of the time");
+                /*double[] picks = f1.getPicks();
+                System.out.println("Uppercut: " + picks[0]);
+                System.out.println("Cross: " + picks[1]);
+                System.out.println("Shielded Cross: " + picks[2]);
+                System.out.println("Quick Block: " + picks[3]);
+                System.out.println("Full Block: " + picks[4]);
+                System.out.println("Jab: " + picks[5]);
+                System.out.println("Shielded Jab: " + picks[6]);*/
             }
             if(i <= 25){
                 System.out.println("\n ====================Battle #" + battle + "==================== \n" );
