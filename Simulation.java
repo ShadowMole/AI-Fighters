@@ -9,7 +9,7 @@ public class Simulation{
     }
 
     public void sim(){
-        int times = 10000;
+        int times = 100000;
         for(int i = times; i > 0; i--){
             f1.reset();
             f2.reset();

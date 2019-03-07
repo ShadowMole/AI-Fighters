@@ -152,7 +152,7 @@ public class Fighter{
 
     public void changeHealth(double moveDamage, double enemyAttack, String move){
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
-        if(damage >= 0){
+        if(damage > 0){
             currentHealth -= damage;
             if(sim <= 25){
                 if(enemy.getDecide() == 1){
@@ -168,6 +168,14 @@ public class Fighter{
             }
             System.out.println("");
             }*/
+        }else{
+            if(sim <= 25){
+                if(enemy.getDecide() == 1){
+                    System.out.println("Randomly " + enemy.getName() + "'s "  + move + " Attack was ineffective against "  + name  + " at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                }else{
+                    System.out.println(enemy.getName() + "'s "  + move + " Attack was ineffective against "  + name  + " at " + Battle.getTime() / 1000.0 + " seconds. \n");
+                }
+            }
         }
     }
 
