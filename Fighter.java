@@ -39,8 +39,8 @@ public class Fighter{
         commands = new ArrayList<>();
         totalHealth = 500;
         currentHealth = totalHealth;
-        attack = 50 + strength;
-        defense = 25;
+        attack = 0 + strength;
+        defense = 0;
         speed = 100;
         inMove = false;
         moveTime = 0;
@@ -77,7 +77,7 @@ public class Fighter{
             lastState = new Status(info);
             Runnable thread = new VThread(this, brain2, lastState);
             executor.execute(thread);
-            if(name.equals("Fighter 1") && values != null){
+            if(!name.equals("Fighter 3") && values != null){
                 int decision = brain.makeDecision(info, values);
                 newCommand(decision);
                 picks[decision]++;
@@ -138,7 +138,7 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
-        if(name.equals("Fighter 1")){
+        if(!name.equals("Fighter 3")){
             Runnable thread = new QThread(brain2, lastState, currentMove, currentHealth, enemy.getHealth());
             executor.execute(thread);
             // brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());

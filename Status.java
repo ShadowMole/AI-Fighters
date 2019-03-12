@@ -19,7 +19,7 @@ public class Status {
         enemyDefense = info[5];
         enemyMoveAtk = info[6];
         enemyMoveDef = info[7];
-        time = (int) info[8] / 30000;
+        time = (int) info[8] / 10000;
     }
     
     public int getHealth(){
