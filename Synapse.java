@@ -1,3 +1,4 @@
+package AI-Fighters;
 public class Synapse{
 
     private double weights;
