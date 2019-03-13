@@ -12,11 +12,11 @@ public class QLearn{
     private double qValue;
     private double maxReward;
 
-    public QLearn(){
+    public QLearn(double l, double d){
         lastValues = new ConcurrentHashMap<>();
         maxValues = new ConcurrentHashMap<>();
-        learn = .01;
-        discount = .01;
+        learn = l;
+        discount = d;
         maxReward = 0;
     }
 
@@ -45,10 +45,10 @@ public class QLearn{
         for(Move x : last.keySet()){
             //    for(Move y : max.keySet()){
             if(m.equals(x)/* && m.equals(y)*/){
-                double qValue = getQValue(last.get(x), max.get(x));
-                last.replace(x, last.get(x), qValue);
+                double value = getQValue(last.get(x), max.get(x));
+                last.replace(x, last.get(x), value);
                 if(qValue > max.get(x)){
-                    max.replace(x, max.get(x), qValue);
+                    max.replace(x, max.get(x), value);
                 }
                 return true;
                 //      }
@@ -59,23 +59,23 @@ public class QLearn{
 
     public double getQValue(double last, double max){
         qValue = ((1 - learn) * last) + (learn * (reward + discount * max));
-        return ((1 - learn) * last) + (learn * (reward + discount * max));
+        return qValue;
     }
 
-    public void calcReward(double health, double enemy, double knew, double newEnemy){
+    public void calcReward(double health, double enemy, double knew, double newEnemy, double winRate){
         double top = (enemy - newEnemy);
         double bottom = (health - knew);
         if(bottom == 0){
             bottom = 1;
         }
-        reward = top / bottom;
+        reward = (top / bottom) + winRate;
         if(reward > maxReward){
             maxReward = reward;
         }
     }
 
-    public void newQValue(Status s, Move m, double newHealth, double enemyHealth){
-        calcReward(s.getHealth(), s.getEnemyHealth(), newHealth, enemyHealth);
+    public void newQValue(Status s, Move m, double newHealth, double enemyHealth, double winrate){
+        calcReward(s.getHealth(), s.getEnemyHealth(), newHealth, enemyHealth, winrate);
         checkState(s,m);
     }
 

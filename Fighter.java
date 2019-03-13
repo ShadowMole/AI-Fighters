@@ -26,12 +26,13 @@ public class Fighter{
     private int sim;
     private int decide;
     private int wins;
+    private int battles;
     private double[] picks;
     private Status lastState;
     private ExecutorService executor;
     private HashMap<Move, Double> values;
 
-    public Fighter(String name, double regen, double strength){
+    public Fighter(String name, double regen, double strength, double learn, double discount){
         executor = Executors.newFixedThreadPool(5);
         this.name = name;
         abilities = new ArrayList<>();
@@ -45,6 +46,7 @@ public class Fighter{
         inMove = false;
         moveTime = 0;
         wins = 0;
+        battles = 1;
         this.regen = regen;
         picks = new double[7];
         for(int i = 0; i < picks.length; i++){
@@ -59,7 +61,7 @@ public class Fighter{
 
         moves.forEach(m -> commands.add(m.getCommand()));
         brain = new Network(9, commands.size());
-        brain2 = new QLearn();
+        brain2 = new QLearn(learn, discount);
     }
 
     public void act(){
@@ -121,6 +123,7 @@ public class Fighter{
         enemy = f;
         lastHealth = currentHealth;
         lastOpponent = enemy.getHealth();
+        battles++;
     }
 
     public void newCommand(int x){
@@ -139,7 +142,7 @@ public class Fighter{
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
         if(!name.equals("Fighter 3")){
-            Runnable thread = new QThread(brain2, lastState, currentMove, currentHealth, enemy.getHealth());
+            Runnable thread = new QThread(brain2, lastState, currentMove, currentHealth, enemy.getHealth(), getWinRate());
             executor.execute(thread);
             // brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
         }
@@ -216,6 +219,10 @@ public class Fighter{
 
     public double[] getPicks(){
         return picks;
+    }
+
+    public double getWinRate(){
+        return (double)wins / (double)battles;
     }
 
     public void setValues(HashMap<Move, Double> values){

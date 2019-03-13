@@ -8,17 +8,19 @@ public class QThread extends Thread {
     private Move m;
     private double health;
     private double enemy;
+    private double winrate;
 
-    public QThread(QLearn q, Status s, Move m, double health, double enemy){  
+    public QThread(QLearn q, Status s, Move m, double health, double enemy, double wr){
         this.q = q;
         this.s = s;
         this.m = m;
         this.health = health;
         this.enemy = enemy;
+        winrate = wr;
     }  
 
     public void run() {  
-        q.newQValue(s, m, health, enemy);
+        q.newQValue(s, m, health, enemy, winrate);
         Thread.currentThread().interrupt();
         return;
     }  
