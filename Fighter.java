@@ -75,7 +75,7 @@ public class Fighter{
             currentHealth += regen;
         }
         if(Battle.getTime() % speed == 0 && !inMove){
-            double[] info = {currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), Battle.getTime()};
+            double[] info = {currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), Battle.getTime(), enemy.getMoveTime()};
             lastState = new Status(info);
             Runnable thread = new VThread(this, brain2, lastState);
             executor.execute(thread);
@@ -157,7 +157,7 @@ public class Fighter{
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
         if(damage > 0){
             currentHealth -= damage;
-            if(sim <= 25){
+            if(sim <= 10){
                 if(enemy.getDecide() == 1){
                     System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
                 }else{
@@ -172,7 +172,7 @@ public class Fighter{
             System.out.println("");
             }*/
         }else{
-            if(sim <= 25){
+            if(sim <= 10){
                 if(enemy.getDecide() == 1){
                     System.out.println("Randomly " + enemy.getName() + "'s "  + move + " Attack was ineffective against "  + name  + " at " + Battle.getTime() / 1000.0 + " seconds. \n");
                 }else{
@@ -180,6 +180,10 @@ public class Fighter{
                 }
             }
         }
+    }
+
+    public void endBattleLearn(){
+        brain.learn(1 - getWinRate());
     }
 
     public String getName(){
@@ -222,10 +226,18 @@ public class Fighter{
     }
 
     public double getWinRate(){
-        return (double)wins / (double)battles;
+        double winRate = (double)wins / (double)battles;
+        /*if(winRate == 0){
+            winRate = 1.0 / (double)battles;
+        }*/
+        return winRate;
     }
 
     public void setValues(HashMap<Move, Double> values){
         this.values = values;
+    }
+
+    public int getMoveTime(){
+        return moveTime;
     }
 }

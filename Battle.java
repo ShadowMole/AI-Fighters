@@ -49,8 +49,12 @@ public class Battle{
             }
             f2.incWins();
         }
-        //f1.getBrain().learn((f2.getHealth() - f2.getTotalHealth()) / (f1.getHealth() - f1.getTotalHealth()));
-        // f2.getBrain().learn((f1.getHealth() - f1.getTotalHealth()) / (f2.getHealth() - f2.getTotalHealth()));
+        if(!f1.getName().equals("Fighter 3")){
+            f1.endBattleLearn();
+        }
+        if(!f2.getName().equals("Fighter 3")){
+            f2.endBattleLearn();
+        }
         /*try{
         Thread.sleep(10);
         }

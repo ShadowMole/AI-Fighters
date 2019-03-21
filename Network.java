@@ -87,6 +87,7 @@ public class Network{
         info[6] = info[6] / 100;
         info[7] = info[7] / 100;
         info[8] = info[8] / 90000;
+        info[9] = info[9] / 1200;
         for(int i = 0; i < input.length; i++){
             input[i].feedforward(info[i]);
             input[i].fire();

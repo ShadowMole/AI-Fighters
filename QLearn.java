@@ -68,7 +68,7 @@ public class QLearn{
         if(bottom == 0){
             bottom = 1;
         }
-        reward = (top / bottom) + winRate;
+        reward = (top / bottom);
         if(reward > maxReward){
             maxReward = reward;
         }
@@ -107,6 +107,7 @@ public class QLearn{
     }
 
     public double getError(){
-        return maxReward - reward;
+        //Normalized error
+        return (reward / maxReward);
     }
 }

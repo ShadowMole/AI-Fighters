@@ -9,6 +9,7 @@ public class Status {
     private double enemyMoveAtk;
     private double enemyMoveDef;
     private int time;
+    private int enemyMoveTime;
 
     public Status(double[] info){
         health = (int) info[0] / 25;
@@ -20,6 +21,7 @@ public class Status {
         enemyMoveAtk = info[6];
         enemyMoveDef = info[7];
         time = (int) info[8] / 10000;
+        enemyMoveTime = (int) info[9];
     }
     
     public int getHealth(){
@@ -53,13 +55,17 @@ public class Status {
     public double getEnemyMoveDef(){
         return enemyMoveDef;
     }
+
+    public int getEnemyMoveTime(){
+        return enemyMoveTime;
+    }
     
     public int getTime(){
         return time;
     }
 
     public boolean equals(Status s){
-        if(health == s.getHealth() && enemyHealth == s.getEnemyHealth() && attack == s.getAttack() && enemyAttack == s.getEnemyAttack() && defense == s.getDefense() && enemyMoveAtk == s.getEnemyMoveAtk() && enemyMoveDef == s.getEnemyMoveDef() && time == s.getTime()){
+        if(health == s.getHealth() && enemyHealth == s.getEnemyHealth() && attack == s.getAttack() && enemyAttack == s.getEnemyAttack() && defense == s.getDefense() && enemyMoveAtk == s.getEnemyMoveAtk() && enemyMoveDef == s.getEnemyMoveDef() && time == s.getTime() && enemyMoveTime == s.getEnemyMoveTime()){
             return true;
         }
         return false;
