@@ -135,8 +135,9 @@ public class Network{
                 if(count == hiddenDelta.size()){
                     count = 0;
                 }
-                Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
-                executor.execute(thread);
+                //Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
+                //executor.execute(thread);
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
             }
         }
@@ -146,8 +147,9 @@ public class Network{
                 if(count == hiddenDelta.size()){
                     count = 0;
                 }
-                Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
-                executor.execute(thread);
+                //Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
+                //executor.execute(thread);
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
             }
         }
@@ -157,8 +159,9 @@ public class Network{
                 if(count == hiddenDelta.size()){
                     count = 0;
                 }
-                Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
-                executor.execute(thread);
+                //Runnable thread = new NThread(s, hiddenDelta.get(count), deltaOutput);
+                //executor.execute(thread);
+                s.learning(hiddenDelta.get(count), deltaOutput);
                 count++;
             }
         }

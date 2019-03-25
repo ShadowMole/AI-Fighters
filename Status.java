@@ -12,8 +12,8 @@ public class Status {
     private int enemyMoveTime;
 
     public Status(double[] info){
-        health = (int) info[0] / 25;
-        enemyHealth = (int) info[1] / 25;
+        health = (int) info[0] / 5;
+        enemyHealth = (int) info[1] / 5;
         attack = info[2];
         enemyAttack = info[3];
         defense = info[4];
@@ -21,7 +21,7 @@ public class Status {
         enemyMoveAtk = info[6];
         enemyMoveDef = info[7];
         time = (int) info[8] / 10000;
-        enemyMoveTime = (int) info[9];
+        enemyMoveTime = (int) info[9] / 100;
     }
     
     public int getHealth(){
@@ -64,10 +64,23 @@ public class Status {
         return time;
     }
 
-    public boolean equals(Status s){
-        if(health == s.getHealth() && enemyHealth == s.getEnemyHealth() && attack == s.getAttack() && enemyAttack == s.getEnemyAttack() && defense == s.getDefense() && enemyMoveAtk == s.getEnemyMoveAtk() && enemyMoveDef == s.getEnemyMoveDef() && time == s.getTime() && enemyMoveTime == s.getEnemyMoveTime()){
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj){
             return true;
         }
-        return false;
+        
+        if(obj == null || obj.getClass()!= this.getClass()) {
+            return false; 
+        }
+        
+        Status s = (Status) obj;
+        
+        return (health == s.getHealth() && enemyHealth == s.getEnemyHealth() && attack == s.getAttack() && enemyAttack == s.getEnemyAttack() && defense == s.getDefense() && enemyMoveAtk == s.getEnemyMoveAtk() && enemyMoveDef == s.getEnemyMoveDef() && time == s.getTime() && enemyMoveTime == s.getEnemyMoveTime());
+    }
+    
+    @Override
+    public int hashCode(){
+        return (int) health + (int) enemyHealth + (int) attack + (int) enemyAttack + (int) defense + (int) enemyDefense + (int) enemyMoveAtk + (int) enemyMoveDef + enemyMoveTime + time;
     }
 }

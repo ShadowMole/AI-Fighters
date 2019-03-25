@@ -31,8 +31,9 @@ public class Fighter{
     private Status lastState;
     private ExecutorService executor;
     private HashMap<Move, Double> values;
+    private Boolean random;
 
-    public Fighter(String name, double regen, double strength, double learn, double discount){
+    public Fighter(String name, double regen, double strength, double d, double learn, double discount, boolean r){
         executor = Executors.newFixedThreadPool(5);
         this.name = name;
         abilities = new ArrayList<>();
@@ -40,14 +41,15 @@ public class Fighter{
         commands = new ArrayList<>();
         totalHealth = 500;
         currentHealth = totalHealth;
-        attack = 0 + strength;
-        defense = 0;
+        attack = strength;
+        defense = d;
         speed = 100;
         inMove = false;
         moveTime = 0;
         wins = 0;
         battles = 1;
         this.regen = regen;
+        random = r;
         picks = new double[7];
         for(int i = 0; i < picks.length; i++){
             picks[i] = 0;
@@ -77,9 +79,10 @@ public class Fighter{
         if(Battle.getTime() % speed == 0 && !inMove){
             double[] info = {currentHealth, enemy.getHealth(), attack, enemy.getAttack(),defense, enemy.getDefense(), enemy.getCurrentMoveAttack(), enemy.getCurrentMoveDefense(), Battle.getTime(), enemy.getMoveTime()};
             lastState = new Status(info);
-            Runnable thread = new VThread(this, brain2, lastState);
-            executor.execute(thread);
-            if(!name.equals("Fighter 3") && values != null){
+            //Runnable thread = new VThread(this, brain2, lastState);
+            //executor.execute(thread);
+            setValues(brain2.findState(lastState));
+            if(!random && values != null){
                 int decision = brain.makeDecision(info, values);
                 newCommand(decision);
                 picks[decision]++;
@@ -141,9 +144,10 @@ public class Fighter{
     public void endMove(){
         enemy.changeHealth(currentMove.getAttack(), attack, currentMove.getName());
         inMove = false;
-        if(!name.equals("Fighter 3")){
-            Runnable thread = new QThread(brain2, lastState, currentMove, currentHealth, enemy.getHealth(), getWinRate());
-            executor.execute(thread);
+        if(!random){
+            //Runnable thread = new QThread(brain2, lastState, currentMove, currentHealth, enemy.getHealth(), getWinRate());
+            //executor.execute(thread);
+            brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth(), getWinRate());
             // brain2.newQValue(lastState, currentMove, currentHealth, enemy.getHealth());
         }
         if(decide == 0){
@@ -157,14 +161,14 @@ public class Fighter{
         double damage = moveDamage + enemyAttack - defense - getCurrentMoveDefense();
         if(damage > 0){
             currentHealth -= damage;
-            if(sim <= 10){
+            if(sim <= 1){
                 if(enemy.getDecide() == 1){
                     System.out.println("Randomly " + enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
                 }else{
                     System.out.println(enemy.getName() + " has damaged " + name + " by " + damage + " points with " + move + " Attack at " + Battle.getTime() / 1000.0 + " seconds. \n");
                 }
             }
-            double[] outputs = enemy.getBrain().getOutputs();
+            //double[] outputs = enemy.getBrain().getOutputs();
             /*if(enemy.getDecide() == 0){
             for(int i = 0; i < outputs.length; i++){
             System.out.println("Output " + i + ": " + outputs[i]);
@@ -172,7 +176,7 @@ public class Fighter{
             System.out.println("");
             }*/
         }else{
-            if(sim <= 10){
+            if(sim <= 1){
                 if(enemy.getDecide() == 1){
                     System.out.println("Randomly " + enemy.getName() + "'s "  + move + " Attack was ineffective against "  + name  + " at " + Battle.getTime() / 1000.0 + " seconds. \n");
                 }else{
@@ -219,6 +223,10 @@ public class Fighter{
 
     public int getWins(){
         return wins;
+    }
+    
+    public boolean getRandom(){
+        return random;
     }
 
     public double[] getPicks(){

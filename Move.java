@@ -9,43 +9,43 @@ public class Move{
     public Move(String name){
         this.name = name;
         if(name.equals("Uppercut")){
-            command = Command.MONDAY;
+            command = Command.UPPERCUT;
             attack = 100;
             defense = 0;
             time = 1200;
         }
         if(name.equals("Cross")){
-            command = Command.TUESDAY;
+            command = Command.CROSS;
             attack = 50;
             defense = 0;
             time = 400;
         }
         if(name.equals("Shielded Cross")){
-            command = Command.WEDNESDAY;
+            command = Command.SHIELDEDCROSS;
             attack = 50;
             defense = 25;
             time = 800;
         }
         if(name.equals("Quick Block")){
-            command = Command.THURSDAY;
+            command = Command.QUICKBLOCK;
             attack = 0;
             defense = 75;
             time = 200;
         }
         if(name.equals("Full Block")){
-            command = Command.FRIDAY;
+            command = Command.FULLBLOCK;
             attack = 0;
             defense = 100;
             time = 1000;
         }
         if(name.equals("Jab")){
-            command = Command.SATURDAY;
+            command = Command.JAB;
             attack = 10;
             defense = 0;
             time = 100;
         }
         if(name.equals("Shielded Jab")){
-            command = Command.SUNDAY;
+            command = Command.SHIELDEDJAB;
             attack = 20;
             defense = 50;
             time = 600;
@@ -72,10 +72,22 @@ public class Move{
         return defense;
     }
 
-    public boolean equals(Move m){
-        if(name.equals(m.getName())){
+    public boolean equals(Object obj){
+        if(this == obj){
             return true;
         }
-        return false;
+        
+        if(obj == null || obj.getClass()!= this.getClass()) {
+            return false; 
+        }
+        
+        Move m = (Move) obj;
+        
+        
+        return (name.equals(m.getName()));
+    }
+    
+    public int hashCode(){
+        return name.length() + time + (int) attack + (int) defense;
     }
 }
